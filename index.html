@@ -108,24 +108,34 @@ body { font-family: 'Onest', -apple-system, sans-serif; background: var(--bg); c
 .btn3d:active{transform:translateY(4px);box-shadow:0 1px 0 #1a3a17,0 4px 8px rgba(0,0,0,.2);}
 
 /* ═══ CALM ═══ */
-#tab-calm{background:linear-gradient(150deg,#071420 0%,#0d2137 45%,#0a2818 100%);border-radius:var(--radius);padding:clamp(14px,3vw,24px);min-height:calc(100vh - 160px);}
+#tab-calm{
+  background:linear-gradient(170deg,#0d1f0d 0%,#1a3a1a 35%,#2d4a1a 65%,#1a2d10 100%);
+  border-radius:var(--radius);padding:clamp(14px,3vw,24px);min-height:calc(100vh - 160px);
+  position:relative;overflow:hidden;
+}
+#tab-calm::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 25% 20%,rgba(100,200,60,.1) 0%,transparent 55%),
+             radial-gradient(ellipse at 80% 75%,rgba(60,140,30,.08) 0%,transparent 50%);
+  pointer-events:none;
+}
 @media(max-width:768px){#tab-calm{min-height:auto;}}
-.calm-title{color:#cce8ff;font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:700;text-align:center;margin-bottom:6px;}
-#timer-disp{font-size:clamp(2.2rem,8vw,4rem);font-weight:700;color:#7dd4fc;text-align:center;letter-spacing:2px;text-shadow:0 0 30px rgba(125,212,252,.6);margin:4px 0;}
-#breath-lbl{font-size:clamp(.95rem,2.8vw,1.2rem);font-weight:600;color:#a5f3fc;text-align:center;min-height:26px;margin:4px 0;transition:color .5s;}
+.calm-title{color:#c8f0a0;font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:700;text-align:center;margin-bottom:6px;position:relative;}
+#timer-disp{font-size:clamp(2.2rem,8vw,4rem);font-weight:700;color:#a8e87c;text-align:center;letter-spacing:2px;text-shadow:0 0 30px rgba(140,230,80,.5);margin:4px 0;position:relative;}
+#breath-lbl{font-size:clamp(.95rem,2.8vw,1.2rem);font-weight:600;color:#b8e89c;text-align:center;min-height:26px;margin:4px 0;transition:color .5s;position:relative;}
 
 /* Breath circle */
 .breath-wrap{position:relative;margin:10px auto;width:clamp(140px,30vw,210px);height:clamp(140px,30vw,210px);display:none;align-items:center;justify-content:center;}
 .breath-wrap.show{display:flex;}
 .b-ring{position:absolute;border-radius:50%;width:100%;height:100%;
-  background:radial-gradient(circle at 33% 33%,#b8e8ff,#0369a1 55%,#012d52);
-  box-shadow:0 0 50px rgba(125,212,252,.4),0 0 100px rgba(125,212,252,.15),inset 0 -10px 25px rgba(0,0,0,.35),inset 0 10px 25px rgba(255,255,255,.12);}
+  background:radial-gradient(circle at 33% 33%,#c8f5a0,#3a8020 55%,#1a4010);
+  box-shadow:0 0 50px rgba(140,230,80,.4),0 0 100px rgba(100,180,50,.15),inset 0 -10px 25px rgba(0,0,0,.35),inset 0 10px 25px rgba(255,255,255,.12);}
 .b-shine{position:absolute;border-radius:50%;width:58%;height:58%;background:radial-gradient(circle at 33% 33%,rgba(255,255,255,.28),transparent 65%);}
 .b-txt{position:relative;z-index:2;color:#fff;font-weight:700;font-size:clamp(.8rem,2.2vw,1rem);text-align:center;text-shadow:0 2px 6px rgba(0,0,0,.5);white-space:pre-line;font-family:inherit;}
 
-@keyframes bIn{from{transform:scale(.55);box-shadow:0 0 20px rgba(125,212,252,.2),inset 0 -10px 25px rgba(0,0,0,.35);}to{transform:scale(1);box-shadow:0 0 70px rgba(125,212,252,.7),0 0 120px rgba(125,212,252,.2),inset 0 -10px 25px rgba(0,0,0,.35);}}
-@keyframes bHold{0%,100%{transform:scale(1);box-shadow:0 0 70px rgba(125,212,252,.7),inset 0 -10px 25px rgba(0,0,0,.35);}}
-@keyframes bOut{from{transform:scale(1);box-shadow:0 0 70px rgba(125,212,252,.7),inset 0 -10px 25px rgba(0,0,0,.35);}to{transform:scale(.55);box-shadow:0 0 20px rgba(125,212,252,.2),inset 0 -10px 25px rgba(0,0,0,.35);}}
+@keyframes bIn{from{transform:scale(.55);box-shadow:0 0 20px rgba(140,230,80,.2),inset 0 -10px 25px rgba(0,0,0,.35);}to{transform:scale(1);box-shadow:0 0 70px rgba(140,230,80,.7),0 0 120px rgba(100,180,50,.2),inset 0 -10px 25px rgba(0,0,0,.35);}}
+@keyframes bHold{0%,100%{transform:scale(1);box-shadow:0 0 70px rgba(140,230,80,.7),inset 0 -10px 25px rgba(0,0,0,.35);}}
+@keyframes bOut{from{transform:scale(1);box-shadow:0 0 70px rgba(140,230,80,.7),inset 0 -10px 25px rgba(0,0,0,.35);}to{transform:scale(.55);box-shadow:0 0 20px rgba(140,230,80,.2),inset 0 -10px 25px rgba(0,0,0,.35);}}
 
 /* Manual time */
 .time-input-row{display:flex;align-items:center;gap:10px;margin:10px 0;justify-content:center;}
@@ -134,13 +144,13 @@ body { font-family: 'Onest', -apple-system, sans-serif; background: var(--bg); c
 .time-label{color:#a5f3fc;font-size:.9rem;}
 
 /* Sound controls */
-.sound-panel{background:rgba(255,255,255,.07);border-radius:14px;padding:12px 14px;margin:10px 0;}
+.sound-panel{background:rgba(255,255,255,.07);border-radius:14px;padding:12px 14px;margin:10px 0;position:relative;}
 .sound-row{display:flex;align-items:center;gap:10px;padding:6px 0;}
 .sound-row:not(:last-child){border-bottom:1px solid rgba(255,255,255,.06);}
-.snd-label{color:#a5f3fc;font-size:.9rem;width:80px;flex-shrink:0;}
+.snd-label{color:#b8e89c;font-size:.9rem;width:90px;flex-shrink:0;}
 .snd-toggle{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;padding:4px 14px;border-radius:20px;cursor:pointer;font-size:.82rem;font-family:inherit;white-space:nowrap;transition:.2s;}
-.snd-toggle.on{background:rgba(125,212,252,.25);border-color:rgba(125,212,252,.4);color:#a5f3fc;}
-input[type=range]{flex:1;accent-color:#7dd4fc;height:4px;}
+.snd-toggle.on{background:rgba(140,230,80,.25);border-color:rgba(140,230,80,.4);color:#a8e87c;}
+input[type=range]{flex:1;accent-color:#a8e87c;height:4px;}
 
 .calm-btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
 .calm-btn{flex:1;min-width:70px;padding:10px 6px;border-radius:12px;border:none;font-family:inherit;font-weight:600;font-size:.9rem;cursor:pointer;background:rgba(255,255,255,.12);color:#cce8ff;transition:.2s;}
@@ -288,12 +298,6 @@ input:checked+.slider:before{transform:translateX(22px);}
         <span class="time-label">⏱ Minuter:</span>
         <input type="number" class="time-input" id="custom-min" value="5" min="1" max="60" placeholder="5">
         <button class="calm-btn start-custom" onclick="startCustom()">Starta</button>
-      </div>
-
-      <div class="calm-btns">
-        <button class="calm-btn" onclick="startBreath(180)">3 min</button>
-        <button class="calm-btn" onclick="startBreath(300)">5 min</button>
-        <button class="calm-btn" onclick="startBreath(600)">10 min</button>
         <button class="calm-btn stop" onclick="stopBreath()">⏹ Stopp</button>
       </div>
 
@@ -307,6 +311,16 @@ input:checked+.slider:before{transform:translateX(22px);}
           <span class="snd-label">🌊 Hav</span>
           <button class="snd-toggle" id="ocean-btn" onclick="toggleSound('ocean')">AV</button>
           <input type="range" id="ocean-vol" min="0" max="1" step="0.05" value="0.35" oninput="setVol('ocean',this.value)">
+        </div>
+        <div class="sound-row">
+          <span class="snd-label">🌲 Skog</span>
+          <button class="snd-toggle" id="forest-btn" onclick="toggleSound('forest')">AV</button>
+          <input type="range" id="forest-vol" min="0" max="1" step="0.05" value="0.35" oninput="setVol('forest',this.value)">
+        </div>
+        <div class="sound-row">
+          <span class="snd-label">🟤 Brunt brus</span>
+          <button class="snd-toggle" id="brown-btn" onclick="toggleSound('brown')">AV</button>
+          <input type="range" id="brown-vol" min="0" max="1" step="0.05" value="0.35" oninput="setVol('brown',this.value)">
         </div>
       </div>
     </div>
@@ -337,28 +351,37 @@ input:checked+.slider:before{transform:translateX(22px);}
         <div class="info-grid" style="margin-bottom:8px;">
           <div class="info-card card-sm">
             <div class="info-icon">⚡</div>
-            <div class="info-label">Aktuellt pris</div>
+            <div class="info-label">Spotpris nu</div>
             <div class="info-value" id="el-now">–</div>
-            <div class="info-sub">öre/kWh</div>
+            <div class="info-sub">öre/kWh (ex. moms)</div>
+          </div>
+          <div class="info-card card-sm">
+            <div class="info-icon">🏷️</div>
+            <div class="info-label">Med moms + Tibber</div>
+            <div class="info-value" id="el-total">–</div>
+            <div class="info-sub">öre/kWh (inkl. allt)</div>
           </div>
           <div class="info-card card-sm">
             <div class="info-icon">📉</div>
             <div class="info-label">Lägst idag</div>
             <div class="info-value" id="el-low">–</div>
-            <div class="info-sub">öre/kWh</div>
+            <div class="info-sub">öre/kWh (ex. moms)</div>
           </div>
           <div class="info-card card-sm">
             <div class="info-icon">📈</div>
             <div class="info-label">Högst idag</div>
             <div class="info-value" id="el-high">–</div>
-            <div class="info-sub">öre/kWh</div>
+            <div class="info-sub">öre/kWh (ex. moms)</div>
           </div>
+        </div>
+        <div style="background:var(--input-bg);border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--text2);margin-bottom:8px;">
+          💡 <strong>Tibber-påslag:</strong> 7,50 öre/kWh + 25% moms på spotpris. Formel: (spotpris × 1,25) + 7,50
         </div>
         <div class="el-zone">
           <span style="font-size:.85rem;color:var(--text2);">Zon:</span>
-          <button class="zone-btn active" onclick="setZone('SE1',this)">SE1</button>
+          <button class="zone-btn" onclick="setZone('SE1',this)">SE1</button>
           <button class="zone-btn" onclick="setZone('SE2',this)">SE2</button>
-          <button class="zone-btn" onclick="setZone('SE3',this)">SE3</button>
+          <button class="zone-btn active" onclick="setZone('SE3',this)">SE3</button>
           <button class="zone-btn" onclick="setZone('SE4',this)">SE4</button>
         </div>
         <div style="font-size:.75rem;color:var(--text2);margin-top:8px;text-align:center;" id="el-updated"></div>
@@ -621,7 +644,6 @@ function getAC(){
 
 function makeRain(){
   const ac=getAC();if(!ac)return null;
-  // Layered noise for natural rain
   const gain=ac.createGain();gain.gain.value=0;gain.connect(ac.destination);
   function addLayer(freq,q,vol){
     const buf=ac.createBuffer(1,ac.sampleRate*3,ac.sampleRate);
@@ -629,8 +651,7 @@ function makeRain(){
     const src=ac.createBufferSource();src.buffer=buf;src.loop=true;
     const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=freq;f.Q.value=q;
     const g=ac.createGain();g.gain.value=vol;
-    src.connect(f);f.connect(g);g.connect(gain);src.start();
-    return src;
+    src.connect(f);f.connect(g);g.connect(gain);src.start();return src;
   }
   addLayer(600,0.8,0.6);addLayer(1200,1.2,0.4);addLayer(3000,2,0.2);
   return {gain,type:'rain'};
@@ -639,29 +660,75 @@ function makeRain(){
 function makeOcean(){
   const ac=getAC();if(!ac)return null;
   const gain=ac.createGain();gain.gain.value=0;gain.connect(ac.destination);
-  // LFO-modulated noise for wave effect
   const buf=ac.createBuffer(1,ac.sampleRate*4,ac.sampleRate);
   const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
   const src=ac.createBufferSource();src.buffer=buf;src.loop=true;
   const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=400;
   const lfo=ac.createOscillator();lfo.frequency.value=0.1;
-  const lfoGain=ac.createGain();lfoGain.gain.value=200;
-  lfo.connect(lfoGain);lfoGain.connect(f.frequency);lfo.start();
+  const lfoG=ac.createGain();lfoG.gain.value=200;
+  lfo.connect(lfoG);lfoG.connect(f.frequency);lfo.start();
   src.connect(f);f.connect(gain);src.start();
   return {gain,type:'ocean'};
+}
+
+function makeForest(){
+  const ac=getAC();if(!ac)return null;
+  const gain=ac.createGain();gain.gain.value=0;gain.connect(ac.destination);
+  // Soft wind base
+  const buf=ac.createBuffer(1,ac.sampleRate*4,ac.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const src=ac.createBufferSource();src.buffer=buf;src.loop=true;
+  const wind=ac.createBiquadFilter();wind.type='bandpass';wind.frequency.value=300;wind.Q.value=0.5;
+  const windG=ac.createGain();windG.gain.value=0.4;
+  // Rustling leaves (higher freq layer)
+  const buf2=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);
+  const d2=buf2.getChannelData(0);for(let i=0;i<d2.length;i++)d2[i]=Math.random()*2-1;
+  const src2=ac.createBufferSource();src2.buffer=buf2;src2.loop=true;
+  const leaves=ac.createBiquadFilter();leaves.type='highpass';leaves.frequency.value=2000;
+  const leavesG=ac.createGain();leavesG.gain.value=0.15;
+  // Slow LFO for wind gusts
+  const lfo=ac.createOscillator();lfo.frequency.value=0.05;
+  const lfoG=ac.createGain();lfoG.gain.value=0.2;
+  lfo.connect(lfoG);lfoG.connect(windG.gain);lfo.start();
+  src.connect(wind);wind.connect(windG);windG.connect(gain);
+  src2.connect(leaves);leaves.connect(leavesG);leavesG.connect(gain);
+  src.start();src2.start();
+  return {gain,type:'forest'};
+}
+
+function makeBrown(){
+  const ac=getAC();if(!ac)return null;
+  const gain=ac.createGain();gain.gain.value=0;gain.connect(ac.destination);
+  // Brown noise = integrated white noise (1/f²)
+  const buf=ac.createBuffer(1,ac.sampleRate*4,ac.sampleRate);
+  const d=buf.getChannelData(0);
+  let last=0;
+  for(let i=0;i<d.length;i++){
+    const white=Math.random()*2-1;
+    last=(last+0.02*white)/1.02;
+    d[i]=last*3.5;
+  }
+  const src=ac.createBufferSource();src.buffer=buf;src.loop=true;
+  const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=200;
+  src.connect(f);f.connect(gain);src.start();
+  return {gain,type:'brown'};
 }
 
 function toggleSound(type){
   const btn=document.getElementById(type+'-btn');
   if(!sounds[type]){
-    sounds[type]=type==='rain'?makeRain():makeOcean();
+    if(type==='rain')sounds[type]=makeRain();
+    else if(type==='ocean')sounds[type]=makeOcean();
+    else if(type==='forest')sounds[type]=makeForest();
+    else if(type==='brown')sounds[type]=makeBrown();
   }
   if(!sounds[type])return;
   const g=sounds[type].gain;
+  const labels={'rain':'PÅ 🌧️','ocean':'PÅ 🌊','forest':'PÅ 🌲','brown':'PÅ 🟤'};
   if(g.gain.value===0){
     const vol=parseFloat(document.getElementById(type+'-vol').value);
     g.gain.setTargetAtTime(vol,getAC().currentTime,0.3);
-    btn.innerText=type==='rain'?'PÅ 🌧️':'PÅ 🌊';btn.classList.add('on');
+    btn.innerText=labels[type];btn.classList.add('on');
   }else{
     g.gain.setTargetAtTime(0,getAC().currentTime,0.3);
     btn.innerText='AV';btn.classList.remove('on');
@@ -673,10 +740,10 @@ function setVol(type,v){
   }
 }
 function stopAllSounds(){
-  ['rain','ocean'].forEach(t=>{
+  ['rain','ocean','forest','brown'].forEach(t=>{
     if(sounds[t]){sounds[t].gain.gain.setTargetAtTime(0,getAC()?.currentTime||0,0.3);}
-    document.getElementById(t+'-btn').innerText='AV';
-    document.getElementById(t+'-btn').classList.remove('on');
+    const btn=document.getElementById(t+'-btn');
+    if(btn){btn.innerText='AV';btn.classList.remove('on');}
   });
 }
 
@@ -712,12 +779,16 @@ async function fetchEl(){
     const curOre=Math.round(cur.SEK_per_kWh*100);
     const low=Math.round(Math.min(...prices));
     const high=Math.round(Math.max(...prices));
+    // Med moms (25%) + Tibber-påslag 7,50 öre/kWh
+    const withVatAndTibber=Math.round(curOre*1.25+7.5);
     document.getElementById('el-now').innerText=curOre;
+    document.getElementById('el-total').innerText=withVatAndTibber;
     document.getElementById('el-low').innerText=low;
     document.getElementById('el-high').innerText=high;
     document.getElementById('el-updated').innerText='Uppdaterad '+now.toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})+' · Zon '+elZone;
   }catch(e){
     document.getElementById('el-now').innerText='–';
+    document.getElementById('el-total').innerText='–';
     document.getElementById('el-updated').innerText='Kunde inte hämta elpris. Kontrollera internet.';
   }
 }
