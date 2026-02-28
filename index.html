@@ -104,22 +104,25 @@ body { font-family: 'Onest', -apple-system, sans-serif; background: var(--bg); c
 .grat-sentences{text-align:left;padding:4px 0;}
 .grat-line{font-weight:600;font-size:clamp(.9rem,2.5vw,1.05rem);padding:10px 0;display:flex;align-items:center;gap:10px;}
 .grat-line:not(:last-child){border-bottom:1px solid var(--border);}
+body.dark .grat-line{color:#e8f0e8 !important;}
 .btn3d{background:linear-gradient(145deg,var(--accent2),var(--accent));color:#fff;border:none;border-radius:14px;padding:11px 18px;font-size:clamp(.8rem,2vw,.95rem);font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 5px 0 #1a3a17,0 8px 16px rgba(0,0,0,.25);transform:translateY(0);transition:transform .1s,box-shadow .1s;}
 .btn3d:active{transform:translateY(4px);box-shadow:0 1px 0 #1a3a17,0 4px 8px rgba(0,0,0,.2);}
 
 /* ═══ CALM ═══ */
 #tab-calm{
-  background:linear-gradient(170deg,#0d1f0d 0%,#1a3a1a 35%,#2d4a1a 65%,#1a2d10 100%);
+  background:#0d1f0d;
+  background-image: url('https://picsum.photos/id/15/1200/800');
+  background-size:cover;background-position:center;
   border-radius:var(--radius);padding:clamp(14px,3vw,24px);min-height:calc(100vh - 160px);
   position:relative;overflow:hidden;
 }
 #tab-calm::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 25% 20%,rgba(100,200,60,.1) 0%,transparent 55%),
-             radial-gradient(ellipse at 80% 75%,rgba(60,140,30,.08) 0%,transparent 50%);
+  background:rgba(5,20,5,0.62);
+  border-radius:var(--radius);
   pointer-events:none;
 }
-@media(max-width:768px){#tab-calm{min-height:auto;}}
+@media(max-width:768px){#tab-calm{min-height:auto;background-size:cover;}}
 .calm-title{color:#c8f0a0;font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:700;text-align:center;margin-bottom:6px;position:relative;}
 #timer-disp{font-size:clamp(2.2rem,8vw,4rem);font-weight:700;color:#a8e87c;text-align:center;letter-spacing:2px;text-shadow:0 0 30px rgba(140,230,80,.5);margin:4px 0;position:relative;}
 #breath-lbl{font-size:clamp(.95rem,2.8vw,1.2rem);font-weight:600;color:#b8e89c;text-align:center;min-height:26px;margin:4px 0;transition:color .5s;position:relative;}
@@ -213,7 +216,28 @@ input:checked+.slider:before{transform:translateX(22px);}
 .list-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;margin-bottom:6px;background:var(--input-bg);font-size:.88rem;}
 .del-btn{background:none;border:none;color:#ef5350;cursor:pointer;font-size:1.1rem;padding:0 4px;}
 
-#screen-info{font-size:.72rem;color:var(--text2);margin-bottom:12px;background:var(--card);padding:4px 12px;border-radius:20px;display:inline-block;border:1px solid var(--border);}
+/* ═══ HJÄLP TAB ═══ */
+.help-search-wrap{position:relative;margin-bottom:16px;}
+.help-search{width:100%;padding:12px 16px 12px 44px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-family:inherit;font-size:1rem;box-shadow:var(--shadow);}
+.help-search:focus{outline:none;border-color:var(--accent);}
+.help-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;}
+.help-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.help-cat{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--text2);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:.2s;}
+.help-cat.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.help-section{margin-bottom:10px;}
+.help-section-title{font-size:1rem;font-weight:700;color:var(--accent);padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.help-item{padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;}
+.help-item:hover{background:var(--input-bg);}
+.help-item:last-child{border-bottom:none;}
+.help-item-title{font-weight:600;font-size:.95rem;margin-bottom:4px;color:var(--text);}
+.help-item-preview{font-size:.82rem;color:var(--text2);line-height:1.5;}
+.help-detail{display:none;padding:16px 18px;background:var(--input-bg);border-radius:0 0 16px 16px;}
+.help-detail.open{display:block;animation:fadeIn .3s ease;}
+.help-detail-text{font-size:.9rem;line-height:1.7;color:var(--text);}
+.help-detail-text strong{color:var(--accent);}
+.help-tag{display:inline-block;background:rgba(45,90,39,.12);color:var(--accent);border-radius:8px;padding:2px 8px;font-size:.75rem;font-weight:600;margin-right:4px;margin-bottom:4px;}
+body.dark .help-tag{background:rgba(76,175,80,.15);}
+.no-results{text-align:center;padding:40px 20px;color:var(--text2);font-size:.95rem;}
 </style>
 </head>
 <body>
@@ -260,6 +284,9 @@ input:checked+.slider:before{transform:translateX(22px);}
     </button>
     <button class="side-btn" onclick="showTab('inspire',this)" id="sb-inspire">
       <span class="ico">✨</span> Pepp
+    </button>
+    <button class="side-btn" onclick="showTab('help',this)" id="sb-help">
+      <span class="ico">🧠</span> Hjälp
     </button>
     <button class="side-btn" onclick="showTab('general',this)" id="sb-general">
       <span class="ico">📊</span> Allmänt
@@ -338,6 +365,25 @@ input:checked+.slider:before{transform:translateX(22px);}
       <button class="pepp-btn" onclick="newQuote()">⚡ Ge mig pepp!</button>
     </div>
 
+    <!-- TAB: HJÄLP -->
+    <div id="tab-help" class="tab">
+      <div class="page-title">🧠 Hjälp & Självhjälp</div>
+
+      <div class="help-search-wrap">
+        <span class="help-search-icon">🔍</span>
+        <input type="search" class="help-search" id="help-search" placeholder="Sök t.ex. negativa tankar, ångest, självkritik..." oninput="filterHelp(this.value)">
+      </div>
+
+      <div class="help-cats">
+        <button class="help-cat active" onclick="filterCat('all',this)">Allt</button>
+        <button class="help-cat" onclick="filterCat('tankar',this)">Tankar</button>
+        <button class="help-cat" onclick="filterCat('tankefallor',this)">Tankefällor</button>
+        <button class="help-cat" onclick="filterCat('verktyg',this)">Verktyg</button>
+      </div>
+
+      <div id="help-results"></div>
+    </div>
+
     <!-- TAB: ALLMÄNT -->
     <div id="tab-general" class="tab">
       <div class="page-title">📊 Allmänt</div>
@@ -376,6 +422,12 @@ input:checked+.slider:before{transform:translateX(22px);}
         </div>
         <div style="background:var(--input-bg);border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--text2);margin-bottom:8px;">
           💡 <strong>Tibber-påslag:</strong> 7,50 öre/kWh + 25% moms på spotpris. Formel: (spotpris × 1,25) + 7,50
+        </div>
+        <!-- Prisgraf -->
+        <div style="margin-bottom:8px;">
+          <div style="font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px;">📉 Prisgraf idag (öre/kWh ex. moms)</div>
+          <canvas id="el-chart" style="width:100%;height:160px;border-radius:12px;display:block;"></canvas>
+          <div style="font-size:.72rem;color:var(--text2);text-align:center;margin-top:4px;">Den röda linjen visar aktuell timme</div>
         </div>
         <div class="el-zone">
           <span style="font-size:.85rem;color:var(--text2);">Zon:</span>
@@ -451,6 +503,7 @@ input:checked+.slider:before{transform:translateX(22px);}
     <button class="bnav-btn active" onclick="showTab('gratitude',this)"><span class="ico">♥</span>Tacksam</button>
     <button class="bnav-btn" onclick="showTab('calm',this)"><span class="ico">🧘</span>Lugn</button>
     <button class="bnav-btn" onclick="showTab('inspire',this)"><span class="ico">✨</span>Pepp</button>
+    <button class="bnav-btn" onclick="showTab('help',this)"><span class="ico">🧠</span>Hjälp</button>
     <button class="bnav-btn" onclick="showTab('general',this)"><span class="ico">📊</span>Allmänt</button>
     <button class="bnav-btn" onclick="showTab('settings',this)"><span class="ico">⚙️</span>Inställn.</button>
   </nav>
@@ -525,6 +578,7 @@ function setTheme(t){
   currentTheme=t;localStorage.setItem('theme',t);applyTheme();
   document.querySelectorAll('.theme-opt').forEach(b=>b.classList.remove('active'));
   document.getElementById('th-'+t).classList.add('active');
+  setTimeout(()=>{if(document.getElementById('tab-general').classList.contains('active'))fetchEl();},150);
 }
 setInterval(()=>{if(currentTheme==='auto')applyTheme();},60000);
 
@@ -555,6 +609,7 @@ function showTab(name, btn){
   if(name!=='calm')stopBreath();
   if(name==='settings'){renderLists();updateScreenInfo();}
   if(name==='general'){fetchEl();loadStats();}
+  if(name==='help'){renderHelp();}
 }
 
 function updateScreenInfo(){
@@ -710,7 +765,9 @@ function makeBrown(){
   }
   const src=ac.createBufferSource();src.buffer=buf;src.loop=true;
   const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=200;
-  src.connect(f);f.connect(gain);src.start();
+  // Internal boost so slider 0.35 = same perceived loudness as others at 0.35
+  const boost=ac.createGain();boost.gain.value=6;
+  src.connect(f);f.connect(boost);boost.connect(gain);src.start();
   return {gain,type:'brown'};
 }
 
@@ -775,21 +832,114 @@ async function fetchEl(){
     const data=await r.json();
     const h=now.getHours();
     const cur=data[h];
-    const prices=data.map(x=>x.SEK_per_kWh*100);
-    const curOre=Math.round(cur.SEK_per_kWh*100);
-    const low=Math.round(Math.min(...prices));
-    const high=Math.round(Math.max(...prices));
-    // Med moms (25%) + Tibber-påslag 7,50 öre/kWh
+    const prices=data.map(x=>Math.round(x.SEK_per_kWh*100));
+    const curOre=prices[h];
+    const low=Math.min(...prices);
+    const high=Math.max(...prices);
     const withVatAndTibber=Math.round(curOre*1.25+7.5);
     document.getElementById('el-now').innerText=curOre;
     document.getElementById('el-total').innerText=withVatAndTibber;
     document.getElementById('el-low').innerText=low;
     document.getElementById('el-high').innerText=high;
     document.getElementById('el-updated').innerText='Uppdaterad '+now.toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})+' · Zon '+elZone;
+    drawElChart(prices, h);
   }catch(e){
     document.getElementById('el-now').innerText='–';
     document.getElementById('el-total').innerText='–';
     document.getElementById('el-updated').innerText='Kunde inte hämta elpris. Kontrollera internet.';
+  }
+}
+
+function drawElChart(prices, currentHour){
+  const canvas=document.getElementById('el-chart');
+  if(!canvas)return;
+  const isDark=document.body.classList.contains('dark');
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.offsetWidth||canvas.parentElement.offsetWidth||320;
+  const H=160;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const pad={top:14,right:10,bottom:28,left:36};
+  const cw=W-pad.left-pad.right;
+  const ch=H-pad.top-pad.bottom;
+  const n=prices.length;
+  const minP=Math.min(...prices);
+  const maxP=Math.max(...prices);
+  const range=maxP-minP||1;
+
+  // Background
+  ctx.fillStyle=isDark?'#1a2230':'#f0f4f0';
+  ctx.roundRect(0,0,W,H,12);ctx.fill();
+
+  // Grid lines
+  ctx.strokeStyle=isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
+  ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.top+ch*(1-i/4);
+    ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cw,y);ctx.stroke();
+    const label=Math.round(minP+range*(i/4));
+    ctx.fillStyle=isDark?'rgba(200,220,200,0.6)':'rgba(60,80,60,0.6)';
+    ctx.font=`${Math.round(9*dpr)/dpr}px Onest,sans-serif`;
+    ctx.textAlign='right';
+    ctx.fillText(label,pad.left-4,y+3);
+  }
+
+  // Filled area under curve
+  const grad=ctx.createLinearGradient(0,pad.top,0,pad.top+ch);
+  grad.addColorStop(0,isDark?'rgba(140,230,80,0.35)':'rgba(45,90,39,0.25)');
+  grad.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath();
+  prices.forEach((p,i)=>{
+    const x=pad.left+(i/(n-1))*cw;
+    const y=pad.top+ch*(1-(p-minP)/range);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(pad.left+cw,pad.top+ch);
+  ctx.lineTo(pad.left,pad.top+ch);
+  ctx.closePath();
+  ctx.fillStyle=grad;ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle=isDark?'#a8e87c':'#2d5a27';
+  ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.lineCap='round';
+  prices.forEach((p,i)=>{
+    const x=pad.left+(i/(n-1))*cw;
+    const y=pad.top+ch*(1-(p-minP)/range);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Dots for known hours
+  prices.forEach((p,i)=>{
+    const x=pad.left+(i/(n-1))*cw;
+    const y=pad.top+ch*(1-(p-minP)/range);
+    ctx.beginPath();
+    ctx.arc(x,y,i===currentHour?5:2.5,0,Math.PI*2);
+    ctx.fillStyle=i===currentHour?'#ef5350':(isDark?'#a8e87c':'#2d5a27');
+    ctx.fill();
+    if(i===currentHour){
+      ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+    }
+  });
+
+  // Current hour vertical line
+  const cx2=pad.left+(currentHour/(n-1))*cw;
+  ctx.beginPath();ctx.strokeStyle='rgba(239,83,80,0.5)';ctx.lineWidth=1.5;
+  ctx.setLineDash([4,3]);
+  ctx.moveTo(cx2,pad.top);ctx.lineTo(cx2,pad.top+ch);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Hour labels on x-axis (every 3h)
+  ctx.fillStyle=isDark?'rgba(200,220,200,0.6)':'rgba(60,80,60,0.6)';
+  ctx.font=`${Math.round(9*dpr)/dpr}px Onest,sans-serif`;
+  ctx.textAlign='center';
+  for(let i=0;i<n;i+=3){
+    const x=pad.left+(i/(n-1))*cw;
+    ctx.fillText(i+'h',x,H-6);
   }
 }
 
@@ -842,9 +992,190 @@ function removeGrat(i){myGrat.splice(i,1);saveL('gratList',myGrat);renderLists()
 function addQuote(){const i=document.getElementById('newQuoteIn');const v=i.value.trim();if(!v)return;myQuotes.push(v);saveL('quoteList',myQuotes);i.value='';renderLists();}
 function removeQuote(i){myQuotes.splice(i,1);saveL('quoteList',myQuotes);renderLists();}
 
+// ═══ HJÄLP DATA ═══
+const helpData = [
+  // ── RESONERA MED DINA TANKAR ──
+  { id:'h1', cat:'tankar', tags:['negativa tankar','grubbel','ifrågasätta'],
+    title:'Hur tänker andra i samma situation?',
+    preview:'Sätt dina tankar i perspektiv genom att fundera på vad andra skulle tänka.',
+    detail:`<strong>Fråga dig själv:</strong><br>Hur tänker andra i en sådan här situation? Vad kan man förvänta sig av någon med dessa förutsättningar? Hur resonerar mina närmaste — släktingar, vänner, arbetskamrater?<br><br><em>Tips: Tänk dig en god vän i din sits. Vad skulle du säga till hen?</em>` },
+
+  { id:'h2', cat:'tankar', tags:['tankefälla','mönster','självkritik'],
+    title:'Är detta ett tankemönster / en tankefälla?',
+    preview:'Identifiera om du fastnat i ett negativt tankemönster.',
+    detail:`<strong>Fråga dig:</strong><br>Är detta ett tankemönster? Vilken tankefälla är det i så fall? Varför kan man kalla det en tankefälla?<br><br>Se fliken <em>Tankefällor</em> för en komplett lista med lösningar.` },
+
+  { id:'h3', cat:'verktyg', tags:['fakta','bevis','verklighet'],
+    title:'Hur prövar jag riktigheten i mina föreställningar?',
+    preview:'Skilj fakta från tankar och föreställningar.',
+    detail:`<strong>Verktyg:</strong><br>Fråga dig: Är detta fakta som jag vet med säkerhet? Hur har jag kommit fram till denna tanke? När dök den upp för första gången?<br><br>Vilka <em>bevis</em> finns för tankens giltighet? Vilka bevis talar <em>emot</em>? Hur kan jag ta reda på om det jag är övertygad om verkligen är sant?` },
+
+  { id:'h4', cat:'verktyg', tags:['fakta','bevis','säkerhet','ursprung'],
+    title:'Är detta fakta jag vet med säkerhet?',
+    preview:'Undersök om dina övertygelser är grundade i fakta.',
+    detail:`<strong>Undersök tanken:</strong><br>• Är detta fakta som jag vet med säkerhet?<br>• Hur har jag kommit fram till denna tanke?<br>• När dök denna tanke upp för första gången?<br>• Vilka bevis finns för tankens giltighet?<br>• Hur kan jag ta reda på om det jag är övertygad om verkligen är sant?` },
+
+  { id:'h5', cat:'verktyg', tags:['scenario','värsta','bästa','realistiskt','sannolikhet'],
+    title:'Värsta, troligaste och bästa scenariot',
+    preview:'Skatta sannolikheten för olika utfall 0–100.',
+    detail:`<strong>Tre scenarion:</strong><br><strong>A.</strong> Vad är det <em>värsta</em> som kan hända?<br><strong>B.</strong> Vad är det <em>troligaste</em> som kommer att hända? Vad brukar hända? Vad har hänt vid liknande tillfällen? Vad är mest realistiskt?<br><strong>C.</strong> Vad är det <em>bästa</em> som kan hända?<br><br>Skatta sedan sannolikheten från 0–100 att A, B eller C inträffar. De flesta gånger är B mer sannolikt än vi tror.` },
+
+  { id:'h6', cat:'tankar', tags:['tvärtom','omvänd','perspektiv'],
+    title:'Tänk om! Kan det vara tvärtom?',
+    preview:'Utmana din tanke genom att vända på den.',
+    detail:`<strong>Övning:</strong><br>"Tänk om! Kan det vara tvärtom mot vad jag tänker?"<br><br>Formulera din negativa tanke. Formulera nu <em>exakt motsatsen</em>. Vilken av dem stöds bäst av bevis? Ofta är sanningen mitt emellan.` },
+
+  { id:'h7', cat:'tankar', tags:['tid','förändring','framtid','perspektiv'],
+    title:'Tänkte jag så här för ett år sedan?',
+    preview:'Sätt tanken i ett tidsperspektiv.',
+    detail:`<strong>Tidsperspektiv:</strong><br>Tänkte jag så här för ett år sedan? Hur skulle jag <em>vilja</em> tänka om ett år?<br><br>Ofta förändras saker mer än vi tror. Denna övning hjälper dig se att tanken kanske inte är permanent sann.` },
+
+  { id:'h8', cat:'tankar', tags:['nyttig','hjälpsam','konstruktiv'],
+    title:'Är detta en nyttig och bra tanke för mig?',
+    preview:'Fråga om tanken tjänar dig eller stjälper dig.',
+    detail:`<strong>Fråga dig:</strong><br>Är denna tanke nyttig och bra för mig? Hjälper den mig att nå mina mål eller mår bra?<br><br>Även om en tanke är "sann" kan den vara skadlig att bära på. Fråga dig om du vill lägga energi på den.` },
+
+  { id:'h9', cat:'verktyg', tags:['hjälp','andra','fråga','stöd'],
+    title:'Vilken hjälp kan jag få av andra?',
+    preview:'Utforska möjligheten att fråga om råd och stöd.',
+    detail:`<strong>Socialt stöd:</strong><br>Vilken hjälp kan jag få av andra? Kan jag fråga andra vad de vet, hur de brukar göra?<br><br>Vi behöver inte lösa allt själva. Att be om hjälp är styrka, inte svaghet.` },
+
+  { id:'h10', cat:'verktyg', tags:['resurser','styrkor','problemlösning','kapacitet'],
+    title:'Vilka egna resurser har jag?',
+    preview:'Identifiera dina styrkor och hur du kan använda dem.',
+    detail:`<strong>Dina resurser:</strong><br>Vilka egna resurser har du för att klara av detta problem? Hur brukar du lösa problem? Vilka är dina <em>starka sidor</em> och hur brukar du använda dem?<br><br>Skriv ned minst tre saker du är bra på eller har klarat förut.` },
+
+  { id:'h11', cat:'tankar', tags:['krav','realistiska','perfektionism','acceptans'],
+    title:'Vad kan jag begära av mig själv?',
+    preview:'Sätt realistiska krav på dig själv.',
+    detail:`<strong>Rimliga krav:</strong><br>Vad kan jag begära av mig själv i den här situationen? Vilka krav är realistiska? Kan jag klara allt? <em>Måste</em> jag klara allt perfekt?<br><br>Ofta sätter vi omöjliga krav på oss själva. Sikta på "tillräckligt bra" — inte perfekt.` },
+
+  { id:'h12', cat:'tankar', tags:['kontroll','acceptans','oro','osäkerhet'],
+    title:'Hur mycket kontroll behöver jag ha?',
+    preview:'Utforska vad som faktiskt är möjligt att kontrollera.',
+    detail:`<strong>Kontroll och acceptans:</strong><br>Hur mycket kontroll över situationen måste jag ha? Kan man ha fullständig kontroll — och behövs det?<br><br>Dela upp i: <em>Kan jag påverka detta?</em> Om ja → agera. Om nej → öva acceptans och släpp taget.` },
+
+  { id:'h13', cat:'tankar', tags:['positiv','omformulera','nytt perspektiv'],
+    title:'Finns det en positiv tanke istället?',
+    preview:'Hitta en alternativ, mer hjälpsam tanke.',
+    detail:`<strong>Omformulering:</strong><br>Finns det någon positiv tanke jag kan tänka när det gäller mitt problem?<br><br>Det handlar inte om att låtsas att allt är bra — utan att hitta en <em>mer balanserad</em> och konstruktiv tanke att ersätta den negativa med.` },
+
+  // ── TANKEFÄLLOR ──
+  { id:'tf1', cat:'tankefallor', tags:['svart vitt','kategorisk','allt eller inget'],
+    title:'Tankefälla 1: Svart-vitt tänkande',
+    preview:'Du ser saker onyanserat — antingen/eller. "Ingen tycker om mig."',
+    detail:`<strong>Vad det är:</strong><br>Du ser saker onyanserat, antingen–eller, allt eller inget. <em>"Ingen tycker om mig."</em><br><br><strong>Hur du bryter den:</strong><br>Försök se gråskala. Var mindre kategorisk. Använd hela spektrat 0–100 istället för svart/vitt. Fråga: "Är det verkligen 0 % eller 100 %?"` },
+
+  { id:'tf2', cat:'tankefallor', tags:['övergeneralisering','misslyckande','alltid','aldrig'],
+    title:'Tankefälla 2: Övergeneralisering',
+    preview:'Du ser en negativ händelse som ett tecken på att allt är fel.',
+    detail:`<strong>Vad det är:</strong><br>Du ser <em>en</em> negativ händelse som ett tecken på att allt är fel. T.ex. du misslyckas på en tenta och tänker <em>"Jag kan ingenting"</em>.<br><br><strong>Hur du bryter den:</strong><br>Undersök konkreta belägg. Hur ofta har detta hänt? Vad var det faktiska utfallet de andra gångerna?` },
+
+  { id:'tf3', cat:'tankefallor', tags:['etikettering','bluff','negativ självbild'],
+    title:'Tankefälla 3: Etikettering',
+    preview:'Du ger dig själv och andra negativa generella etiketter.',
+    detail:`<strong>Vad det är:</strong><br>Du tillskriver dig själv eller andra allmänna, negativa egenskaper. <em>"Jag är en bluff"</em>, <em>"Hon är en skvallerbytta"</em>.<br><br><strong>Hur du bryter den:</strong><br>Undersök faktabevis. Nyansera. Beteenden är inte identiteter — du <em>gjorde</em> ett misstag, du <em>är</em> inte ett misstag.` },
+
+  { id:'tf4', cat:'tankefallor', tags:['måsten','borden','perfektionism','krav'],
+    title:'Tankefälla 4: Borden / Måsten',
+    preview:'Du sätter orealistiska krav på dig själv med "måste" och "borde".',
+    detail:`<strong>Vad det är:</strong><br>Du säger till dig själv att saker och ting bör eller måste vara på ett visst sätt. Du sätter orealistiska krav på dig själv.<br><br><strong>Hur du bryter den:</strong><br>Sätt saker i perspektiv. Hur viktigt är det om 10 år? Ersätt "måste/borde" med <em>"jag skulle vilja / det vore bra / jag skulle föredra"</em>. Sänk kraven till 70 %. Fokusera på nuet.` },
+
+  { id:'tf5', cat:'tankefallor', tags:['tankeläsning','andras tankar','belägg','antaganden'],
+    title:'Tankefälla 5: Tankeläsning',
+    preview:'Du tror att du vet vad andra tänker utan belägg.',
+    detail:`<strong>Vad det är:</strong><br>Du tror att du vet vad andra tänker utan att ha belägg för det. <em>"Hon tycker inte om mig."</em><br><br><strong>Hur du bryter den:</strong><br>Undersök faktabevis. Sök alternativa förklaringar till varför andra beter sig som de gör. Använd andra som referenspunkt, t.ex. genom rollspel (omvända roller). Fråga andra direkt.` },
+
+  { id:'tf6', cat:'tankefallor', tags:['känslotänkande','känsla','fakta','värdelös'],
+    title:'Tankefälla 6: Känslotänkande',
+    preview:'Du låter dina känslor styra verklighetsuppfattningen.',
+    detail:`<strong>Vad det är:</strong><br>Du låter dina känslor styra din uppfattning om verkligheten. <em>"Jag känner mig värdelös, ingen vill vara med mig."</em><br><br><strong>Hur du bryter den:</strong><br>Skilj känsla från fakta. Känslor duger inte som bevis i en domstol. Gör ett rollspel mellan det rationella och det emotionella.` },
+
+  { id:'tf7', cat:'tankefallor', tags:['katastrofiering','oro','ångest','värsta','konkurs'],
+    title:'Tankefälla 7: Katastrofiering',
+    preview:'Du tror att allt kommer gå åt skogen och att du inte kan fixa det.',
+    detail:`<strong>Vad det är:</strong><br>Du tror att allt kommer gå åt skogen och du kommer inte att fixa det. <em>"Det blir hemskt om jag misslyckas"</em>, <em>"Tänk om jag går i konkurs"</em>.<br><br><strong>Hur du bryter den:</strong><br>Undersök faktabevis. Testa hypoteser. Vad är det värsta som <em>faktiskt</em> kan hända? Vad är det bästa? Det mest sannolika? Bli statistiker. Skilj på möjligt och troligt.` },
+
+  { id:'tf8', cat:'tankefallor', tags:['personifiering','självanklagelse','ansvar','skuld'],
+    title:'Tankefälla 8: Personifiering och självanklagelse',
+    preview:'Du tänker att allt handlar om dig eller är ditt fel.',
+    detail:`<strong>Vad det är:</strong><br>Du tänker att allt handlar om dig eller att allt är ditt ansvar och ditt fel.<br><br><strong>Hur du bryter den:</strong><br>Lyft blicken — använd andra som referenspunkt. Sluta anklaga dig själv. Hur mycket ansvar har just du? Vad i situationen har kunnat bidra till att det blivit som det blivit?` },
+
+  { id:'tf9', cat:'tankefallor', tags:['selektiv perception','negativ','jämföra','positiv'],
+    title:'Tankefälla 9: Selektiv perception',
+    preview:'Du ser bara de negativa delarna och ignorerar det positiva.',
+    detail:`<strong>Vad det är:</strong><br>Du ser bara vissa delar av helheten — de negativa — och ignorerar det positiva. Du jämför dig med de som är mer framgångsrika, inte med de som har det sämre.<br><br><strong>Hur du bryter den:</strong><br>Uppmärksamma fler aspekter av situationen. Gör en lista på det som är positivt. Jämför dig med de mindre lyckligt lottade. Schemalägg positiva aktiviteter.` },
+
+  { id:'tf10', cat:'tankefallor', tags:['förstoring','förminskning','misslyckande','framgång'],
+    title:'Tankefälla 10: Förstoring / Förminskning',
+    preview:'Du förstoras dina misslyckanden och förminskar dina framgångar.',
+    detail:`<strong>Vad det är:</strong><br>Du höjer en fjäder när du misslyckas och förringar dina framgångar. Du har svårt att ge beröm till dig eller andra.<br><br><strong>Hur du bryter den:</strong><br>Undersök faktabevis. Se saker i rätt perspektiv. Ge dig erkännande för framgångar och se motgångarna i ett större perspektiv.` },
+];
+
+let helpCat = 'all';
+let helpQuery = '';
+
+function renderHelp(){
+  const cont = document.getElementById('help-results');
+  if(!cont) return;
+  const q = helpQuery.toLowerCase();
+  const items = helpData.filter(item => {
+    const matchCat = helpCat==='all' || item.cat===helpCat;
+    const matchQ = !q || item.title.toLowerCase().includes(q) ||
+      item.preview.toLowerCase().includes(q) ||
+      item.detail.toLowerCase().includes(q) ||
+      item.tags.some(t=>t.includes(q));
+    return matchCat && matchQ;
+  });
+  if(items.length===0){
+    cont.innerHTML='<div class="no-results">😔 Inget hittades för "'+helpQuery+'"<br><small>Prova ett annat sökord</small></div>';
+    return;
+  }
+  // Group by category
+  const groups = {};
+  items.forEach(item=>{
+    const gName = item.cat==='tankar'?'💭 Resonera med dina tankar':
+                  item.cat==='tankefallor'?'🪤 Tankefällor och hur man bryter dem':
+                  '🛠️ Verktyg & Övningar';
+    if(!groups[gName])groups[gName]=[];
+    groups[gName].push(item);
+  });
+  let html='';
+  for(const [gTitle, gitems] of Object.entries(groups)){
+    html+='<div class="card help-section">';
+    html+='<div class="help-section-title">'+gTitle+'</div>';
+    gitems.forEach(item=>{
+      html+=`<div class="help-item" onclick="toggleHelpDetail('${item.id}')">
+        <div class="help-item-title">${item.title}</div>
+        <div class="help-item-preview">${item.preview}</div>
+        <div style="margin-top:6px;">${item.tags.map(t=>'<span class="help-tag">'+t+'</span>').join('')}</div>
+      </div>
+      <div class="help-detail" id="hd-${item.id}">
+        <div class="help-detail-text">${item.detail}</div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  cont.innerHTML=html;
+}
+
+function toggleHelpDetail(id){
+  const el=document.getElementById('hd-'+id);
+  if(!el)return;
+  el.classList.toggle('open');
+}
+function filterHelp(q){helpQuery=q;renderHelp();}
+function filterCat(cat,btn){
+  helpCat=cat;
+  document.querySelectorAll('.help-cat').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderHelp();
+}
+
 // ═══ START ═══
 renderGratitude();
 newQuote();
+renderHelp();
 </script>
 </body>
 </html>
