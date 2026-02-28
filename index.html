@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
@@ -13,263 +14,449 @@
             --bg: #121212; --card: #1e1e1e; --text: #e0e0e0;
             --accent: #81c784; --nav-bg: #1e1e1e; --input-bg: #2a2a2a;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, sans-serif;
-            background-color: var(--bg); color: var(--text);
-            overflow: hidden; transition: background-color 0.4s ease, color 0.4s ease;
-        }
-        #lock-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(160deg, #1a3a2a 0%, #0d1f14 100%);
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: center; z-index: 9999; gap: 20px;
-        }
-        #lock-screen.hidden { display: none; }
-        .lock-icon { font-size: 3rem; margin-bottom: 8px; animation: pulse 2s infinite ease-in-out; }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.08); opacity: 1; }
-        }
-        .lock-title { color: #ffffff; font-size: 1.4rem; font-weight: 600; }
-        .lock-subtitle { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: -12px; }
-        .pin-dots { display: flex; gap: 16px; margin: 8px 0; }
-        .pin-dot {
-            width: 16px; height: 16px; border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.4); background: transparent;
-            transition: background 0.15s, border-color 0.15s, transform 0.15s;
-        }
-        .pin-dot.filled { background: #81c784; border-color: #81c784; transform: scale(1.15); }
-        .pin-dot.error { background: #e57373; border-color: #e57373; animation: shake 0.4s ease; }
-        @keyframes shake {
-            0%,100% { transform: translateX(0); } 20% { transform: translateX(-6px); }
-            40% { transform: translateX(6px); } 60% { transform: translateX(-4px); }
-            80% { transform: translateX(4px); }
-        }
-        .numpad { display: grid; grid-template-columns: repeat(3, 72px); gap: 14px; }
-        .num-btn {
-            width: 72px; height: 72px; border-radius: 50%; border: none;
-            background: rgba(255,255,255,0.1); color: white; font-size: 1.5rem;
-            font-weight: 500; cursor: pointer; transition: background 0.15s, transform 0.1s;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .num-btn:active { background: rgba(255,255,255,0.25); transform: scale(0.93); }
-        .num-btn.empty { background: transparent; cursor: default; }
-        .faceid-btn {
-            background: none; border: 1.5px solid rgba(255,255,255,0.3);
-            color: rgba(255,255,255,0.7); padding: 10px 24px; border-radius: 20px;
-            font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
-        }
-        .faceid-btn.hidden { display: none; }
-        .lock-error { color: #e57373; font-size: 0.85rem; min-height: 20px; text-align: center; }
-        #app { display: flex; flex-direction: column; overflow: hidden; position: fixed; top: 0; left: 0; }
-        #content-area {
-            overflow-y: auto; -webkit-overflow-scrolling: touch;
-            padding: clamp(10px, 3vw, 24px); padding-bottom: 20px;
-        }
-        h1 { font-size: clamp(1.3rem, 4vw, 2.2rem); margin-bottom: 16px; }
-        h3 { font-size: clamp(0.95rem, 2.5vw, 1.2rem); }
-        .tab-content { display: none; text-align: center; }
-        .active-tab { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card {
-            background: var(--card); border-radius: 20px;
-            padding: clamp(10px, 2.5vw, 20px); margin-bottom: 16px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-        .card img { width: 100%; border-radius: 15px; display: block; margin-bottom: 12px; }
-        .settings-card {
-            background: var(--card); border-radius: 20px;
-            padding: clamp(12px, 3vw, 22px); margin-bottom: 16px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: left;
-        }
-        .settings-card h3 { margin: 0 0 12px; color: var(--accent); }
-        .settings-row {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 0; border-bottom: 1px solid rgba(128,128,128,0.15);
-        }
-        .settings-row:last-child { border-bottom: none; }
-        .settings-label { font-size: clamp(0.9rem, 2.5vw, 1.05rem); }
-        .auto-badge {
-            font-size: 0.75rem; background: var(--accent); color: white;
-            padding: 2px 8px; border-radius: 20px; margin-left: 8px;
-        }
-        .toggle { position: relative; width: 50px; height: 28px; flex-shrink: 0; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background: #ccc; border-radius: 28px; transition: 0.3s;
-        }
-        .slider:before {
-            content: ""; position: absolute; width: 20px; height: 20px;
-            left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: 0.3s;
-        }
-        input:checked + .slider { background: var(--accent); }
-        input:checked + .slider:before { transform: translateX(22px); }
-        #timer-display { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: bold; margin: 16px 0; color: var(--accent); }
-        .breath-circle {
-            width: clamp(100px, 25vw, 180px); height: clamp(100px, 25vw, 180px);
-            background: var(--accent); border-radius: 50%; margin: 16px auto; opacity: 0.3; display: none;
-        }
-        .breathing { display: block; animation: breathe 8s infinite ease-in-out; }
-        @keyframes breathe {
-            0%, 100% { transform: scale(0.8); opacity: 0.2; }
-            50% { transform: scale(1.2); opacity: 0.6; }
-        }
-        .btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
-        .action-btn {
-            flex: 1; padding: clamp(10px, 2.5vw, 16px); border-radius: 15px; border: none;
-            background: var(--accent); color: white; font-weight: bold; cursor: pointer;
-            font-size: clamp(0.85rem, 2.5vw, 1rem);
-        }
-        .input-row { display: flex; gap: 8px; margin-top: 10px; }
-        .text-input {
-            flex: 1; padding: 12px; border-radius: 12px;
-            border: 1px solid rgba(128,128,128,0.3);
-            background: var(--input-bg); color: var(--text); font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-        }
-        .text-input:focus { outline: 2px solid var(--accent); }
-        .add-btn {
-            padding: 12px 16px; border-radius: 12px; border: none;
-            background: var(--accent); color: white; font-weight: bold; cursor: pointer; white-space: nowrap;
-        }
-        .item-list { margin-top: 10px; max-height: 200px; overflow-y: auto; }
-        .list-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 10px; border-radius: 10px; margin-bottom: 6px;
-            background: var(--input-bg); font-size: clamp(0.8rem, 2.2vw, 0.9rem);
-        }
-        .del-btn { background: none; border: none; color: #e57373; cursor: pointer; font-size: 1.1rem; }
-        #bottom-nav {
-            display: flex; justify-content: space-around;
-            background: var(--nav-bg); box-shadow: 0 -2px 10px rgba(0,0,0,0.1); flex-shrink: 0;
-        }
-        #bottom-nav button {
-            background: none; border: none; color: #888; display: flex; flex-direction: column;
-            align-items: center; font-size: clamp(0.65rem, 2vw, 0.8rem); cursor: pointer; padding: 10px 8px; flex: 1;
-        }
-        #bottom-nav button .nav-icon { font-size: clamp(1.2rem, 4vw, 1.6rem); }
-        #bottom-nav button.active { color: var(--accent); font-weight: bold; }
-        #screen-info {
-            font-size: 0.72rem; color: #888; margin-top: 4px;
-            background: var(--card); padding: 4px 10px; border-radius: 20px; display: inline-block;
-        }
-    </style>
+
+```
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: -apple-system, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        overflow: hidden;
+        transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* ── LOCK SCREEN ── */
+    #lock-screen {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(160deg, #1a3a2a 0%, #0d1f14 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        gap: 20px;
+    }
+    #lock-screen.hidden { display: none; }
+
+    .lock-icon {
+        font-size: 3rem;
+        margin-bottom: 8px;
+        animation: pulse 2s infinite ease-in-out;
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.08); opacity: 1; }
+    }
+
+    .lock-title {
+        color: #ffffff;
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    .lock-subtitle {
+        color: rgba(255,255,255,0.5);
+        font-size: 0.85rem;
+        margin-top: -12px;
+    }
+
+    /* PIN dots */
+    .pin-dots {
+        display: flex;
+        gap: 16px;
+        margin: 8px 0;
+    }
+    .pin-dot {
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.4);
+        background: transparent;
+        transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .pin-dot.filled {
+        background: #81c784;
+        border-color: #81c784;
+        transform: scale(1.15);
+    }
+    .pin-dot.error {
+        background: #e57373;
+        border-color: #e57373;
+        animation: shake 0.4s ease;
+    }
+    @keyframes shake {
+        0%,100% { transform: translateX(0); }
+        20% { transform: translateX(-6px); }
+        40% { transform: translateX(6px); }
+        60% { transform: translateX(-4px); }
+        80% { transform: translateX(4px); }
+    }
+
+    /* Numpad */
+    .numpad {
+        display: grid;
+        grid-template-columns: repeat(3, 72px);
+        gap: 14px;
+    }
+    .num-btn {
+        width: 72px; height: 72px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        transition: background 0.15s, transform 0.1s;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .num-btn:active {
+        background: rgba(255,255,255,0.25);
+        transform: scale(0.93);
+    }
+    .num-btn.empty { background: transparent; cursor: default; }
+    .num-btn.delete { font-size: 1.3rem; }
+
+    /* Face ID button */
+    .faceid-btn {
+        margin-top: 4px;
+        background: none;
+        border: 1.5px solid rgba(255,255,255,0.3);
+        color: rgba(255,255,255,0.7);
+        padding: 10px 24px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .faceid-btn:active {
+        background: rgba(255,255,255,0.1);
+        color: white;
+    }
+    .faceid-btn.hidden { display: none; }
+
+    .lock-error {
+        color: #e57373;
+        font-size: 0.85rem;
+        min-height: 20px;
+        text-align: center;
+    }
+
+    /* ── APP ── */
+    #app {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: fixed;
+        top: 0; left: 0;
+    }
+
+    #content-area {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: clamp(10px, 3vw, 24px);
+        padding-bottom: 20px;
+    }
+
+    h1 { font-size: clamp(1.3rem, 4vw, 2.2rem); margin-bottom: 16px; }
+    h3 { font-size: clamp(0.95rem, 2.5vw, 1.2rem); }
+
+    .tab-content { display: none; text-align: center; }
+    .active-tab  { display: block; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .card {
+        background: var(--card); border-radius: 20px;
+        padding: clamp(10px, 2.5vw, 20px); margin-bottom: 16px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+    .card img { width: 100%; border-radius: 15px; display: block; }
+
+    .settings-card {
+        background: var(--card); border-radius: 20px;
+        padding: clamp(12px, 3vw, 22px); margin-bottom: 16px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: left;
+    }
+    .settings-card h3 { margin: 0 0 12px; color: var(--accent); }
+
+    .settings-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 0; border-bottom: 1px solid rgba(128,128,128,0.15);
+    }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-label { font-size: clamp(0.9rem, 2.5vw, 1.05rem); }
+
+    .auto-badge {
+        font-size: 0.75rem; background: var(--accent); color: white;
+        padding: 2px 8px; border-radius: 20px; margin-left: 8px;
+    }
+
+    .toggle { position: relative; width: 50px; height: 28px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+        position: absolute; cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: #ccc; border-radius: 28px; transition: 0.3s;
+    }
+    .slider:before {
+        content: ""; position: absolute;
+        width: 20px; height: 20px; left: 4px; bottom: 4px;
+        background: white; border-radius: 50%; transition: 0.3s;
+    }
+    input:checked + .slider { background: var(--accent); }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    #timer-display {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        font-weight: bold; margin: 16px 0; color: var(--accent);
+    }
+
+    .breath-circle {
+        width: clamp(100px, 25vw, 180px);
+        height: clamp(100px, 25vw, 180px);
+        background: var(--accent); border-radius: 50%;
+        margin: 16px auto; opacity: 0.3; display: none;
+    }
+    .breathing { display: block; animation: breathe 8s infinite ease-in-out; }
+    @keyframes breathe {
+        0%, 100% { transform: scale(0.8); opacity: 0.2; }
+        50%       { transform: scale(1.2); opacity: 0.6; }
+    }
+
+    .btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+    .action-btn {
+        flex: 1; padding: clamp(10px, 2.5vw, 16px);
+        border-radius: 15px; border: none;
+        background: var(--accent); color: white;
+        font-weight: bold; cursor: pointer;
+        font-size: clamp(0.85rem, 2.5vw, 1rem);
+    }
+
+    .input-row { display: flex; gap: 8px; margin-top: 10px; }
+    .text-input {
+        flex: 1; padding: 12px; border-radius: 12px;
+        border: 1px solid rgba(128,128,128,0.3);
+        background: var(--input-bg); color: var(--text);
+        font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+    }
+    .text-input:focus { outline: 2px solid var(--accent); }
+    .add-btn {
+        padding: 12px 16px; border-radius: 12px; border: none;
+        background: var(--accent); color: white; font-weight: bold;
+        cursor: pointer; font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+        white-space: nowrap;
+    }
+    .item-list { margin-top: 10px; max-height: 200px; overflow-y: auto; }
+    .list-item {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 8px 10px; border-radius: 10px; margin-bottom: 6px;
+        background: var(--input-bg); font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+    }
+    .del-btn {
+        background: none; border: none; color: #e57373;
+        cursor: pointer; font-size: 1.1rem; padding: 0 4px; flex-shrink: 0;
+    }
+
+    #bottom-nav {
+        display: flex; justify-content: space-around;
+        background: var(--nav-bg);
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        flex-shrink: 0;
+    }
+    #bottom-nav button {
+        background: none; border: none; color: #888;
+        display: flex; flex-direction: column; align-items: center;
+        font-size: clamp(0.65rem, 2vw, 0.8rem);
+        cursor: pointer; padding: 10px 8px; flex: 1;
+    }
+    #bottom-nav button .nav-icon { font-size: clamp(1.2rem, 4vw, 1.6rem); }
+    #bottom-nav button.active { color: var(--accent); font-weight: bold; }
+
+    #screen-info {
+        font-size: 0.72rem; color: #888; margin-top: 4px;
+        background: var(--card); padding: 4px 10px;
+        border-radius: 20px; display: inline-block;
+    }
+</style>
+```
+
 </head>
 <body>
+
+<!-- ══════════════ LOCK SCREEN ══════════════ -->
 
 <div id="lock-screen">
     <div class="lock-icon">🔒</div>
     <div class="lock-title">Min Välmående-app</div>
     <div class="lock-subtitle">Ange din PIN-kod</div>
-    <div class="pin-dots">
-        <div class="pin-dot" id="d0"></div>
-        <div class="pin-dot" id="d1"></div>
-        <div class="pin-dot" id="d2"></div>
-        <div class="pin-dot" id="d3"></div>
-        <div class="pin-dot" id="d4"></div>
-        <div class="pin-dot" id="d5"></div>
-    </div>
-    <div class="lock-error" id="lock-error"></div>
-    <div class="numpad">
-        <button class="num-btn" onclick="pinPress('1')">1</button>
-        <button class="num-btn" onclick="pinPress('2')">2</button>
-        <button class="num-btn" onclick="pinPress('3')">3</button>
-        <button class="num-btn" onclick="pinPress('4')">4</button>
-        <button class="num-btn" onclick="pinPress('5')">5</button>
-        <button class="num-btn" onclick="pinPress('6')">6</button>
-        <button class="num-btn" onclick="pinPress('7')">7</button>
-        <button class="num-btn" onclick="pinPress('8')">8</button>
-        <button class="num-btn" onclick="pinPress('9')">9</button>
-        <button class="num-btn empty"></button>
-        <button class="num-btn" onclick="pinPress('0')">0</button>
-        <button class="num-btn" onclick="pinDelete()">⌫</button>
-    </div>
-    <button class="faceid-btn hidden" id="faceid-btn" onclick="tryBiometric()">Face ID / Touch ID</button>
+
+```
+<div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d4"></div>
+    <div class="pin-dot" id="d5"></div>
 </div>
+
+<div class="lock-error" id="lock-error"></div>
+
+<div class="numpad">
+    <button class="num-btn" onclick="pinPress('1')">1</button>
+    <button class="num-btn" onclick="pinPress('2')">2</button>
+    <button class="num-btn" onclick="pinPress('3')">3</button>
+    <button class="num-btn" onclick="pinPress('4')">4</button>
+    <button class="num-btn" onclick="pinPress('5')">5</button>
+    <button class="num-btn" onclick="pinPress('6')">6</button>
+    <button class="num-btn" onclick="pinPress('7')">7</button>
+    <button class="num-btn" onclick="pinPress('8')">8</button>
+    <button class="num-btn" onclick="pinPress('9')">9</button>
+    <button class="num-btn empty"></button>
+    <button class="num-btn" onclick="pinPress('0')">0</button>
+    <button class="num-btn delete" onclick="pinDelete()">⌫</button>
+</div>
+
+<button class="faceid-btn" id="faceid-btn" onclick="tryBiometric()">
+    <span>󠀠</span> Face ID / Touch ID
+</button>
+```
+
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
 
 <div id="app">
     <div id="content-area">
 
-        <div id="tab-gratitude" class="tab-content active-tab">
-            <h1>Dagens Tacksamhet</h1>
-            <div id="gratitude-container"></div>
-            <button class="action-btn" onclick="renderGratitude()">Nya tankar ✨</button>
-        </div>
-
-        <div id="tab-calm" class="tab-content">
-            <h1>Lugn & Ro</h1>
-            <div class="card">
-                <img id="calm-img" src="https://picsum.photos/id/15/400/250" alt="Lugn natur">
-                <div id="timer-display">00:00</div>
-                <div id="breath-hint" style="margin-bottom:10px;color:var(--accent);">Välj en tid för att starta</div>
-                <div id="circle" class="breath-circle"></div>
-                <div class="btn-row">
-                    <button class="action-btn" onclick="startTimer(180)">3 Min</button>
-                    <button class="action-btn" onclick="startTimer(300)">5 Min</button>
-                    <button class="action-btn" style="background:#888;" onclick="stopTimer()">Stopp</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-inspire" class="tab-content">
-            <h1>Inspiration</h1>
-            <div class="card">
-                <p id="quote-text" style="font-style:italic;font-size:clamp(1rem,3vw,1.3rem);"></p>
-            </div>
-            <button class="action-btn" onclick="newQuote()">Ge mig pepp! ⚡</button>
-        </div>
-
-        <div id="tab-settings" class="tab-content">
-            <h1>⚙️ Inställningar</h1>
-            <div id="screen-info"></div>
-            <div class="settings-card" style="margin-top:14px;">
-                <h3>🎨 Utseende</h3>
-                <div class="settings-row">
-                    <span class="settings-label">🌙 Dark mode <span class="auto-badge" id="auto-badge" style="display:none;">AUTO</span></span>
-                    <label class="toggle"><input type="checkbox" id="darkModeToggle" onchange="onDarkToggleChange(this.checked)"><span class="slider"></span></label>
-                </div>
-                <div class="settings-row">
-                    <span class="settings-label">⏰ Auto dark mode (19:00–07:00)</span>
-                    <label class="toggle"><input type="checkbox" id="autoModeToggle" onchange="onAutoToggleChange(this.checked)"><span class="slider"></span></label>
-                </div>
-            </div>
-            <div class="settings-card">
-                <h3>🔒 Säkerhet</h3>
-                <div class="settings-row">
-                    <span class="settings-label">Face ID / Touch ID</span>
-                    <label class="toggle"><input type="checkbox" id="biometricToggle" onchange="onBiometricToggle(this.checked)"><span class="slider"></span></label>
-                </div>
-            </div>
-            <div class="settings-card">
-                <h3>♥ Egna tacksamhetstexter</h3>
-                <div class="input-row">
-                    <input type="text" class="text-input" id="newGratitudeInput" placeholder="T.ex. Tacksam för solen..." maxlength="100">
-                    <button class="add-btn" onclick="addGratitudeText()">+ Lägg till</button>
-                </div>
-                <div class="item-list" id="gratitude-list"></div>
-            </div>
-            <div class="settings-card">
-                <h3>✨ Egna inspirationscitat</h3>
-                <div class="input-row">
-                    <input type="text" class="text-input" id="newQuoteInput" placeholder="T.ex. Du är stark nog!" maxlength="150">
-                    <button class="add-btn" onclick="addQuoteText()">+ Lägg till</button>
-                </div>
-                <div class="item-list" id="quote-list"></div>
-            </div>
-        </div>
-
+```
+    <!-- TACKSAMHET -->
+    <div id="tab-gratitude" class="tab-content active-tab">
+        <h1>Dagens Tacksamhet</h1>
+        <div id="gratitude-container"></div>
+        <button class="action-btn" onclick="renderGratitude()">Nya tankar ✨</button>
     </div>
-    <nav id="bottom-nav">
-        <button onclick="showTab('gratitude', this)" class="active"><span class="nav-icon">♥</span>Tacksam</button>
-        <button onclick="showTab('calm', this)"><span class="nav-icon">🧘</span>Lugn</button>
-        <button onclick="showTab('inspire', this)"><span class="nav-icon">✨</span>Pepp</button>
-        <button onclick="showTab('settings', this)"><span class="nav-icon">⚙️</span>Inställningar</button>
-    </nav>
+
+    <!-- LUGN -->
+    <div id="tab-calm" class="tab-content">
+        <h1>Lugn & Ro</h1>
+        <div class="card">
+            <img id="calm-img" src="https://picsum.photos/id/10/400/250" alt="Lugn natur">
+            <div id="timer-display">00:00</div>
+            <div id="breath-hint" style="margin-bottom:10px; color:var(--accent);">
+                Välj en tid för att starta
+            </div>
+            <div id="circle" class="breath-circle"></div>
+            <div class="btn-row">
+                <button class="action-btn" onclick="startTimer(180)">3 Min</button>
+                <button class="action-btn" onclick="startTimer(300)">5 Min</button>
+                <button class="action-btn" style="background:#888;" onclick="stopTimer()">Stopp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSPIRATION -->
+    <div id="tab-inspire" class="tab-content">
+        <h1>Inspiration</h1>
+        <div class="card">
+            <p id="quote-text" style="font-style:italic; font-size:clamp(1rem,3vw,1.3rem);"></p>
+        </div>
+        <button class="action-btn" onclick="newQuote()">Ge mig pepp! ⚡</button>
+    </div>
+
+    <!-- INSTÄLLNINGAR -->
+    <div id="tab-settings" class="tab-content">
+        <h1>⚙️ Inställningar</h1>
+        <div id="screen-info"></div>
+
+        <div class="settings-card" style="margin-top:14px;">
+            <h3>🎨 Utseende</h3>
+            <div class="settings-row">
+                <span class="settings-label">
+                    🌙 Dark mode
+                    <span class="auto-badge" id="auto-badge" style="display:none;">AUTO</span>
+                </span>
+                <label class="toggle">
+                    <input type="checkbox" id="darkModeToggle" onchange="onDarkToggleChange(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">⏰ Auto dark mode (19:00–07:00)</span>
+                <label class="toggle">
+                    <input type="checkbox" id="autoModeToggle" onchange="onAutoToggleChange(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <h3>🔒 Säkerhet</h3>
+            <div class="settings-row">
+                <span class="settings-label">Face ID / Touch ID</span>
+                <label class="toggle">
+                    <input type="checkbox" id="biometricToggle" onchange="onBiometricToggle(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label" style="font-size:0.85rem; color:#888;">PIN-kod: 6 siffror (ändras i koden)</span>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <h3>♥ Egna tacksamhetstexter</h3>
+            <div class="input-row">
+                <input type="text" class="text-input" id="newGratitudeInput"
+                    placeholder="T.ex. Tacksam för solen..." maxlength="100">
+                <button class="add-btn" onclick="addGratitudeText()">+ Lägg till</button>
+            </div>
+            <div class="item-list" id="gratitude-list"></div>
+        </div>
+
+        <div class="settings-card">
+            <h3>✨ Egna inspirationscitat</h3>
+            <div class="input-row">
+                <input type="text" class="text-input" id="newQuoteInput"
+                    placeholder="T.ex. Du är stark nog!" maxlength="150">
+                <button class="add-btn" onclick="addQuoteText()">+ Lägg till</button>
+            </div>
+            <div class="item-list" id="quote-list"></div>
+        </div>
+    </div>
+
+</div>
+
+<nav id="bottom-nav">
+    <button onclick="showTab('gratitude', this)" class="active">
+        <span class="nav-icon">♥</span>Tacksam
+    </button>
+    <button onclick="showTab('calm', this)">
+        <span class="nav-icon">🧘</span>Lugn
+    </button>
+    <button onclick="showTab('inspire', this)">
+        <span class="nav-icon">✨</span>Pepp
+    </button>
+    <button onclick="showTab('settings', this)">
+        <span class="nav-icon">⚙️</span>Inställningar
+    </button>
+</nav>
+```
+
 </div>
 
 <script>
-    const CORRECT_PIN = '123456';
+    // ══════════════════════════════════════════
+    //  PIN & BIOMETRICS
+    // ══════════════════════════════════════════
+    const CORRECT_PIN = '486810'; // ← Ändra din PIN här
     let pinEntry = '';
 
     function updateDots() {
@@ -279,140 +466,276 @@
             if (i < pinEntry.length) dot.classList.add('filled');
         }
     }
+
     function pinPress(digit) {
         if (pinEntry.length >= 6) return;
-        pinEntry += digit; updateDots();
+        pinEntry += digit;
+        updateDots();
         document.getElementById('lock-error').innerText = '';
-        if (pinEntry.length === 6) setTimeout(checkPin, 150);
+        if (pinEntry.length === 6) {
+            setTimeout(checkPin, 150);
+        }
     }
+
     function pinDelete() {
-        pinEntry = pinEntry.slice(0, -1); updateDots();
+        pinEntry = pinEntry.slice(0, -1);
+        updateDots();
         document.getElementById('lock-error').innerText = '';
     }
+
     function checkPin() {
         if (pinEntry === CORRECT_PIN) {
             unlock();
         } else {
+            // Shake dots red
             for (let i = 0; i < 6; i++) {
-                document.getElementById('d' + i).classList.remove('filled');
-                document.getElementById('d' + i).classList.add('error');
+                const dot = document.getElementById('d' + i);
+                dot.classList.remove('filled');
+                dot.classList.add('error');
             }
             document.getElementById('lock-error').innerText = 'Fel PIN-kod, försök igen';
             setTimeout(() => {
-                for (let i = 0; i < 6; i++) document.getElementById('d' + i).classList.remove('error');
-                pinEntry = ''; updateDots();
+                for (let i = 0; i < 6; i++) {
+                    document.getElementById('d' + i).classList.remove('error');
+                }
+                pinEntry = '';
+                updateDots();
             }, 800);
         }
     }
+
     function unlock() {
         document.getElementById('lock-screen').classList.add('hidden');
+        localStorage.setItem('lastUnlock', Date.now());
     }
 
+    // ── BIOMETRICS (Web Authentication API) ──
+    // NOTE: Face ID/Touch ID via WebAuthn requires HTTPS and first-time registration.
+    // On iOS Safari as home screen app this works natively.
+
     async function tryBiometric() {
-        if (!window.PublicKeyCredential) { document.getElementById('lock-error').innerText = 'Biometri ej tillgänglig'; return; }
+        // Check if WebAuthn is available
+        if (!window.PublicKeyCredential) {
+            document.getElementById('lock-error').innerText = 'Biometri ej tillgänglig på denna enhet';
+            return;
+        }
+
+        const biometricEnabled = localStorage.getItem('biometricEnabled') === '1';
         const credId = localStorage.getItem('biometricCredId');
-        if (!credId) { document.getElementById('lock-error').innerText = 'Aktivera Face ID i Inställningar'; return; }
+
+        if (!biometricEnabled || !credId) {
+            document.getElementById('lock-error').innerText = 'Aktivera Face ID i Inställningar först';
+            return;
+        }
+
         try {
-            const challenge = new Uint8Array(32); crypto.getRandomValues(challenge);
+            const challenge = new Uint8Array(32);
+            crypto.getRandomValues(challenge);
+
             const assertion = await navigator.credentials.get({
-                publicKey: { challenge, allowCredentials: [{ id: base64ToBuffer(credId), type: 'public-key', transports: ['internal'] }], userVerification: 'required', timeout: 60000 }
-            });
-            if (assertion) unlock();
-        } catch(e) { document.getElementById('lock-error').innerText = 'Biometri misslyckades, ange PIN'; }
-    }
-    async function registerBiometric() {
-        if (!window.PublicKeyCredential) { alert('Face ID stöds ej'); document.getElementById('biometricToggle').checked = false; return; }
-        try {
-            const challenge = new Uint8Array(32); crypto.getRandomValues(challenge);
-            const userId = new Uint8Array(16); crypto.getRandomValues(userId);
-            const cred = await navigator.credentials.create({
                 publicKey: {
-                    challenge, rp: { name: 'Välmående-app' },
-                    user: { id: userId, name: 'user', displayName: 'Användare' },
-                    pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
-                    authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
+                    challenge,
+                    allowCredentials: [{
+                        id: base64ToBuffer(credId),
+                        type: 'public-key',
+                        transports: ['internal']
+                    }],
+                    userVerification: 'required',
                     timeout: 60000
                 }
             });
-            localStorage.setItem('biometricCredId', bufferToBase64(cred.rawId));
-            localStorage.setItem('biometricEnabled', '1');
-            document.getElementById('faceid-btn').classList.remove('hidden');
-            alert('Face ID aktiverat! ✅');
-        } catch(e) { alert('Kunde inte aktivera: ' + e.message); document.getElementById('biometricToggle').checked = false; }
-    }
-    function onBiometricToggle(on) {
-        if (on) { registerBiometric(); }
-        else { localStorage.setItem('biometricEnabled', '0'); localStorage.removeItem('biometricCredId'); document.getElementById('faceid-btn').classList.add('hidden'); }
-    }
-    function bufferToBase64(b) { return btoa(String.fromCharCode(...new Uint8Array(b))); }
-    function base64ToBuffer(s) {
-        const bin = atob(s); const buf = new Uint8Array(bin.length);
-        for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
-        return buf.buffer;
+
+            if (assertion) unlock();
+        } catch (e) {
+            document.getElementById('lock-error').innerText = 'Biometri misslyckades, ange PIN';
+        }
     }
 
+    async function registerBiometric() {
+        if (!window.PublicKeyCredential) {
+            alert('Din enhet stöder inte Face ID/Touch ID via webben.');
+            document.getElementById('biometricToggle').checked = false;
+            return;
+        }
+        try {
+            const challenge = new Uint8Array(32);
+            crypto.getRandomValues(challenge);
+            const userId = new Uint8Array(16);
+            crypto.getRandomValues(userId);
+
+            const cred = await navigator.credentials.create({
+                publicKey: {
+                    challenge,
+                    rp: { name: 'Välmående-app' },
+                    user: { id: userId, name: 'user', displayName: 'Användare' },
+                    pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
+                    authenticatorSelection: {
+                        authenticatorAttachment: 'platform',
+                        userVerification: 'required'
+                    },
+                    timeout: 60000
+                }
+            });
+
+            const credId = bufferToBase64(cred.rawId);
+            localStorage.setItem('biometricCredId', credId);
+            localStorage.setItem('biometricEnabled', '1');
+            alert('Face ID / Touch ID aktiverat! ✅');
+        } catch (e) {
+            alert('Kunde inte aktivera Face ID/Touch ID:\n' + e.message);
+            document.getElementById('biometricToggle').checked = false;
+            localStorage.setItem('biometricEnabled', '0');
+        }
+    }
+
+    function onBiometricToggle(on) {
+        if (on) {
+            registerBiometric();
+        } else {
+            localStorage.setItem('biometricEnabled', '0');
+            localStorage.removeItem('biometricCredId');
+        }
+    }
+
+    // Show/hide Face ID button based on setting
+    function updateFaceIdBtn() {
+        const enabled = localStorage.getItem('biometricEnabled') === '1';
+        const btn = document.getElementById('faceid-btn');
+        btn.classList.toggle('hidden', !enabled);
+    }
+
+    // Buffer helpers for WebAuthn
+    function bufferToBase64(buffer) {
+        return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    }
+    function base64ToBuffer(base64) {
+        const binary = atob(base64);
+        const buffer = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) buffer[i] = binary.charCodeAt(i);
+        return buffer.buffer;
+    }
+
+    // ══════════════════════════════════════════
+    //  APP SIZE
+    // ══════════════════════════════════════════
     function resizeApp() {
-        const app = document.getElementById('app');
-        const nav = document.getElementById('bottom-nav');
-        const ca = document.getElementById('content-area');
+        const app         = document.getElementById('app');
+        const nav         = document.getElementById('bottom-nav');
+        const contentArea = document.getElementById('content-area');
         const W = window.innerWidth, H = window.innerHeight;
-        app.style.width = W + 'px'; app.style.height = H + 'px';
-        ca.style.height = (H - nav.offsetHeight) + 'px';
+        app.style.width    = W + 'px';
+        app.style.height   = H + 'px';
+        app.style.position = 'fixed';
+        app.style.top      = '0';
+        app.style.left     = '0';
+        const navH = nav.offsetHeight;
+        contentArea.style.height = (H - navH) + 'px';
     }
     resizeApp();
     window.addEventListener('resize', resizeApp);
     window.addEventListener('orientationchange', () => setTimeout(resizeApp, 300));
 
+    // ══════════════════════════════════════════
+    //  DATA
+    // ══════════════════════════════════════════
     const defaultGratitudeList = [
-        "Tacksam för kaffet.", "Tacksam för vilan.", "Tacksam för vänner.",
-        "Tacksam för musiken.", "Tacksam för hälsan.", "Tacksam för Anton min son.",
-        "Tacksam för ett varmt hem.", "Tacksam för det man har."
+        "Tacksam för kaffet.",
+        "Tacksam för vilan.",
+        "Tacksam för vänner.",
+        "Tacksam för musiken.",
+        "Tacksam för hälsan.",
+        "Tacksam för Anton min son.",
+        "Tacksam för ett varmt hem.",
+        "Tacksam för det man har."
     ];
     const defaultQuoteList = [
-        "Du klarar detta!", "Varje dag är ett nytt börjande.",
-        "Du är starkare än du tror.", "Ta ett andetag – du gör ditt bästa.", "Framsteg, inte perfektion."
+        "Du klarar detta!",
+        "Varje dag är ett nytt börjande.",
+        "Du är starkare än du tror.",
+        "Ta ett andetag – du gör ditt bästa.",
+        "Framsteg, inte perfektion."
     ];
-    function loadList(key, fallback) { const s = localStorage.getItem(key); return s ? JSON.parse(s) : [...fallback]; }
-    function saveList(key, arr) { localStorage.setItem(key, JSON.stringify(arr)); }
-    let myGratitudeList = loadList('gratitudeList', defaultGratitudeList);
-    let myQuoteList = loadList('quoteList', defaultQuoteList);
 
-    function isNightTime() { const h = new Date().getHours(); return h >= 19 || h < 7; }
-    function applyDarkMode(on) { document.body.classList.toggle('dark-mode', on); document.getElementById('darkModeToggle').checked = on; }
+    function loadList(key, fallback) {
+        const s = localStorage.getItem(key);
+        return s ? JSON.parse(s) : [...fallback];
+    }
+    function saveList(key, arr) {
+        localStorage.setItem(key, JSON.stringify(arr));
+    }
+
+    let myGratitudeList = loadList('gratitudeList', defaultGratitudeList);
+    let myQuoteList     = loadList('quoteList', defaultQuoteList);
+
+    // ══════════════════════════════════════════
+    //  DARK MODE
+    // ══════════════════════════════════════════
+    function isNightTime() {
+        const h = new Date().getHours();
+        return h >= 19 || h < 7;
+    }
+    function applyDarkMode(on) {
+        document.body.classList.toggle('dark-mode', on);
+        document.getElementById('darkModeToggle').checked = on;
+    }
     function onDarkToggleChange(on) {
         if (document.getElementById('autoModeToggle').checked) {
             document.getElementById('autoModeToggle').checked = false;
             localStorage.setItem('autoMode', '0');
             document.getElementById('auto-badge').style.display = 'none';
         }
-        applyDarkMode(on); localStorage.setItem('darkMode', on ? '1' : '0');
+        applyDarkMode(on);
+        localStorage.setItem('darkMode', on ? '1' : '0');
     }
     function onAutoToggleChange(on) {
         localStorage.setItem('autoMode', on ? '1' : '0');
         document.getElementById('auto-badge').style.display = on ? 'inline' : 'none';
         if (on) applyDarkMode(isNightTime());
     }
-    setInterval(() => { if (localStorage.getItem('autoMode') === '1') applyDarkMode(isNightTime()); }, 60000);
+    setInterval(() => {
+        if (localStorage.getItem('autoMode') === '1') applyDarkMode(isNightTime());
+    }, 60000);
 
+    // ══════════════════════════════════════════
+    //  INIT
+    // ══════════════════════════════════════════
     (function init() {
         const autoOn = localStorage.getItem('autoMode') === '1';
         document.getElementById('autoModeToggle').checked = autoOn;
-        if (autoOn) { applyDarkMode(isNightTime()); document.getElementById('auto-badge').style.display = 'inline'; }
-        else { applyDarkMode(localStorage.getItem('darkMode') === '1'); }
+        if (autoOn) {
+            applyDarkMode(isNightTime());
+            document.getElementById('auto-badge').style.display = 'inline';
+        } else {
+            applyDarkMode(localStorage.getItem('darkMode') === '1');
+        }
+
+        // Biometric toggle state
         const bioEnabled = localStorage.getItem('biometricEnabled') === '1';
         document.getElementById('biometricToggle').checked = bioEnabled;
-        if (bioEnabled) { document.getElementById('faceid-btn').classList.remove('hidden'); setTimeout(tryBiometric, 400); }
+        updateFaceIdBtn();
+
+        // Try biometric automatically on load if enabled
+        if (bioEnabled) {
+            setTimeout(tryBiometric, 400);
+        }
     })();
 
+    // ══════════════════════════════════════════
+    //  SCREEN INFO
+    // ══════════════════════════════════════════
     function updateScreenInfo() {
         const w = window.innerWidth, h = window.innerHeight;
         const device = w >= 1024 ? '🖥️ Dator' : w >= 768 ? '📱 iPad' : '📱 Mobil';
         const el = document.getElementById('screen-info');
-        if (el) el.innerText = device + ' · ' + w + 'x' + h + 'px';
+        if (el) el.innerText = `${device} · ${w}×${h}px`;
     }
     window.addEventListener('resize', updateScreenInfo);
 
+    // ══════════════════════════════════════════
+    //  NAVIGATION
+    // ══════════════════════════════════════════
     let timerInterval;
+
     function showTab(tabName, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
         document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('active'));
@@ -422,19 +745,25 @@
         if (tabName === 'settings') { renderSettingsLists(); updateScreenInfo(); }
     }
 
-    const natureIDs = [15, 28, 37, 57, 82, 96, 106, 119, 143, 152, 167, 173, 180, 188, 195, 211, 228, 237, 247, 258];
-
+    // ══════════════════════════════════════════
+    //  TIMER
+    // ══════════════════════════════════════════
     function startTimer(seconds) {
         stopTimer();
         document.getElementById('circle').classList.add('breathing');
-        document.getElementById('breath-hint').innerText = "Andas in när cirkeln växer, ut när den krymper...";
+        document.getElementById('breath-hint').innerText =
+            "Andas in när cirkeln växer, ut när den krymper...";
         const calmID = natureIDs[Math.floor(Math.random() * natureIDs.length)];
         document.getElementById('calm-img').src = 'https://picsum.photos/id/' + calmID + '/400/250';
         let timeLeft = seconds;
         updateTimerDisplay(timeLeft);
         timerInterval = setInterval(() => {
-            timeLeft--; updateTimerDisplay(timeLeft);
-            if (timeLeft <= 0) { stopTimer(); alert("Bra jobbat! Du har gett dig själv en stunds lugn. 🌿"); }
+            timeLeft--;
+            updateTimerDisplay(timeLeft);
+            if (timeLeft <= 0) {
+                stopTimer();
+                alert("Bra jobbat! Du har gett dig själv en stunds lugn. 🌿");
+            }
         }, 1000);
     }
     function stopTimer() {
@@ -445,8 +774,15 @@
     }
     function updateTimerDisplay(s) {
         const m = Math.floor(s / 60), sec = s % 60;
-        document.getElementById('timer-display').innerText = String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+        document.getElementById('timer-display').innerText =
+            `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
     }
+
+    // ══════════════════════════════════════════
+    //  GRATITUDE
+    // ══════════════════════════════════════════
+    // Fasta bild-ID från picsum.photos – fungerar alltid utan slump-problem
+    const natureIDs = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30];
 
     function renderGratitude() {
         const c = document.getElementById('gratitude-container');
@@ -469,36 +805,67 @@
         });
     }
 
+    // ══════════════════════════════════════════
+    //  QUOTES
+    // ══════════════════════════════════════════
     function newQuote() {
-        document.getElementById('quote-text').innerText = myQuoteList[Math.floor(Math.random() * myQuoteList.length)];
+        document.getElementById('quote-text').innerText =
+            myQuoteList[Math.floor(Math.random() * myQuoteList.length)];
     }
+
+    // ══════════════════════════════════════════
+    //  SETTINGS LISTS
+    // ══════════════════════════════════════════
     function renderSettingsLists() {
         renderItemList('gratitude-list', myGratitudeList, removeGratitudeText);
         renderItemList('quote-list', myQuoteList, removeQuoteText);
     }
     function renderItemList(id, arr, fn) {
-        const el = document.getElementById(id); el.innerHTML = '';
+        const el = document.getElementById(id);
+        el.innerHTML = '';
         arr.forEach((text, i) => {
-            const div = document.createElement('div'); div.className = 'list-item';
-            div.innerHTML = '<span>' + text + '</span><button class="del-btn" onclick="' + fn.name + '(' + i + ')">✕</button>';
+            const div = document.createElement('div');
+            div.className = 'list-item';
+            div.innerHTML = `<span>${text}</span>
+                <button class="del-btn" onclick="(${fn.name})(${i})">✕</button>`;
             el.appendChild(div);
         });
     }
     function addGratitudeText() {
         const input = document.getElementById('newGratitudeInput');
-        const val = input.value.trim(); if (!val) return;
-        myGratitudeList.push(val); saveList('gratitudeList', myGratitudeList); input.value = ''; renderSettingsLists();
+        const val = input.value.trim();
+        if (!val) return;
+        myGratitudeList.push(val);
+        saveList('gratitudeList', myGratitudeList);
+        input.value = '';
+        renderSettingsLists();
     }
-    function removeGratitudeText(i) { myGratitudeList.splice(i, 1); saveList('gratitudeList', myGratitudeList); renderSettingsLists(); }
+    function removeGratitudeText(i) {
+        myGratitudeList.splice(i, 1);
+        saveList('gratitudeList', myGratitudeList);
+        renderSettingsLists();
+    }
     function addQuoteText() {
         const input = document.getElementById('newQuoteInput');
-        const val = input.value.trim(); if (!val) return;
-        myQuoteList.push(val); saveList('quoteList', myQuoteList); input.value = ''; renderSettingsLists();
+        const val = input.value.trim();
+        if (!val) return;
+        myQuoteList.push(val);
+        saveList('quoteList', myQuoteList);
+        input.value = '';
+        renderSettingsLists();
     }
-    function removeQuoteText(i) { myQuoteList.splice(i, 1); saveList('quoteList', myQuoteList); renderSettingsLists(); }
+    function removeQuoteText(i) {
+        myQuoteList.splice(i, 1);
+        saveList('quoteList', myQuoteList);
+        renderSettingsLists();
+    }
 
+    // ══════════════════════════════════════════
+    //  START
+    // ══════════════════════════════════════════
     renderGratitude();
     newQuote();
 </script>
+
 </body>
 </html>
