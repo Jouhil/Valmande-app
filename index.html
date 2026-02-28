@@ -141,10 +141,17 @@ body.dark .grat-line{color:#e8f0e8 !important;}
 @keyframes bOut{from{transform:scale(1);box-shadow:0 0 70px rgba(140,230,80,.7),inset 0 -10px 25px rgba(0,0,0,.35);}to{transform:scale(.55);box-shadow:0 0 20px rgba(140,230,80,.2),inset 0 -10px 25px rgba(0,0,0,.35);}}
 
 /* Manual time */
-.time-input-row{display:flex;align-items:center;gap:10px;margin:10px 0;justify-content:center;}
-.time-input{width:80px;padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:1.1rem;font-family:inherit;text-align:center;}
+.time-ctrl-panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:14px 16px;margin:12px 0;position:relative;}
+.time-ctrl-label{color:#c8f0a0;font-size:.85rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;text-align:center;}
+.time-ctrl-row{display:flex;align-items:center;gap:10px;justify-content:center;}
+.time-input{width:80px;padding:10px 12px;border-radius:12px;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;font-size:1.3rem;font-family:inherit;font-weight:700;text-align:center;transition:.2s;}
+.time-input:focus{outline:none;border-color:#a8e87c;background:rgba(255,255,255,.18);}
 .time-input::placeholder{color:rgba(255,255,255,.4);}
-.time-label{color:#a5f3fc;font-size:.9rem;}
+.time-start-btn{padding:11px 20px;border-radius:14px;border:none;background:linear-gradient(145deg,#5aaa3a,#3a8020);color:#fff;font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #1a5010,0 6px 12px rgba(0,0,0,.3);transform:translateY(0);transition:.1s;white-space:nowrap;}
+.time-start-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1a5010;}
+.time-stop-btn{padding:11px 16px;border-radius:14px;border:1.5px solid rgba(255,120,120,.5);background:rgba(255,80,80,.12);color:#fca5a5;font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;transition:.2s;white-space:nowrap;}
+.time-stop-btn:active{background:rgba(255,80,80,.25);}
+.time-label{color:#b8e89c;font-size:.9rem;flex-shrink:0;}
 
 /* Sound controls */
 .sound-panel{background:rgba(255,255,255,.07);border-radius:14px;padding:12px 14px;margin:10px 0;position:relative;}
@@ -216,7 +223,15 @@ input:checked+.slider:before{transform:translateX(22px);}
 .list-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;margin-bottom:6px;background:var(--input-bg);font-size:.88rem;}
 .del-btn{background:none;border:none;color:#ef5350;cursor:pointer;font-size:1.1rem;padding:0 4px;}
 
-/* ═══ HJÄLP TAB ═══ */
+/* Mantra card */
+.mantra-card{background:linear-gradient(145deg,#0d2010,#1a3a1a);border:1px solid rgba(140,230,80,.2);border-radius:22px;padding:clamp(18px,3.5vw,28px);margin-top:16px;box-shadow:0 8px 32px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.06);}
+.mantra-icon{font-size:2rem;text-align:center;display:block;margin-bottom:8px;}
+.mantra-title{text-align:center;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(200,240,150,.6);margin-bottom:14px;}
+.mantra-line{font-size:clamp(.9rem,2.5vw,1.05rem);line-height:1.75;color:#d4f5d0;font-style:italic;font-weight:400;text-align:center;}
+.mantra-closing{font-weight:600;font-style:normal;color:#c8f0a0;margin-top:4px;}
+.mantra-divider{width:40px;height:2px;background:rgba(140,230,80,.25);border-radius:2px;margin:12px auto;}
+
+
 .help-search-wrap{position:relative;margin-bottom:16px;}
 .help-search{width:100%;padding:12px 16px 12px 44px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-family:inherit;font-size:1rem;box-shadow:var(--shadow);}
 .help-search:focus{outline:none;border-color:var(--accent);}
@@ -321,11 +336,13 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
         <div class="b-txt" id="btxt"></div>
       </div>
 
-      <div class="time-input-row">
-        <span class="time-label">⏱ Minuter:</span>
-        <input type="number" class="time-input" id="custom-min" value="5" min="1" max="60" placeholder="5">
-        <button class="calm-btn start-custom" onclick="startCustom()">Starta</button>
-        <button class="calm-btn stop" onclick="stopBreath()">⏹ Stopp</button>
+      <div class="time-ctrl-panel">
+        <div class="time-ctrl-label">⏱ Ange antal minuter</div>
+        <div class="time-ctrl-row">
+          <input type="number" class="time-input" id="custom-min" value="5" min="1" max="60" placeholder="5">
+          <button class="time-start-btn" onclick="startCustom()">▶ Starta</button>
+          <button class="time-stop-btn" onclick="stopBreath()">⏹ Stopp</button>
+        </div>
       </div>
 
       <div class="sound-panel">
@@ -363,6 +380,16 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
         <p id="quote-txt">Tryck på knappen för din dagliga dos pepp!</p>
       </div>
       <button class="pepp-btn" onclick="newQuote()">⚡ Ge mig pepp!</button>
+
+      <div class="mantra-card">
+        <div class="mantra-icon">🌅</div>
+        <h3 class="mantra-title">Dagens intention</h3>
+        <p class="mantra-line">Detta kommer bli den bästa dagen i mitt liv — inte för att det är perfekt, utan för att jag kommer fullt närvarande och lär mig vad dagen medför.</p>
+        <div class="mantra-divider"></div>
+        <p class="mantra-line">Jag kontrollerar min tanke — den kontrollerar inte mig. Jag kontrollerar inte vad som händer, men jag kontrollerar hur jag agerar och hur jag väljer att svara — med glädje och kärlek, vad som än händer.</p>
+        <div class="mantra-divider"></div>
+        <p class="mantra-line mantra-closing">Glad för vad jag har nu, även om det är något litet — även om dagen inte är perfekt. 🌿</p>
+      </div>
     </div>
 
     <!-- TAB: HJÄLP -->
@@ -411,13 +438,13 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
             <div class="info-icon">📉</div>
             <div class="info-label">Lägst idag</div>
             <div class="info-value" id="el-low">–</div>
-            <div class="info-sub">öre/kWh (ex. moms)</div>
+            <div class="info-sub">öre/kWh · kl. <span id="el-low-time">–</span></div>
           </div>
           <div class="info-card card-sm">
             <div class="info-icon">📈</div>
             <div class="info-label">Högst idag</div>
             <div class="info-value" id="el-high">–</div>
-            <div class="info-sub">öre/kWh (ex. moms)</div>
+            <div class="info-sub">öre/kWh · kl. <span id="el-high-time">–</span></div>
           </div>
         </div>
         <div style="background:var(--input-bg);border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--text2);margin-bottom:8px;">
@@ -560,8 +587,8 @@ window.addEventListener('resize',resizeApp);
 window.addEventListener('orientationchange',()=>setTimeout(resizeApp,300));
 
 // ═══ DATA ═══
-const defGrat=["Tacksam för kaffet.","Tacksam för vilan.","Tacksam för vänner.","Tacksam för musiken.","Tacksam för hälsan.","Tacksam för Anton min son.","Tacksam för ett varmt hem.","Tacksam för det man har.","Jag har hälsa.","Jag har vänner.","Jag bor bra.","Anton min son.","Pappa.","Anna.","Att få äta gott.","Tid utan måsten.","En god kopp te.","Tacksam för det jag har.","Att kunna säga nej. och det är ok","Att kunna säga tack.","Stunder av lugn.","Naturen runt mig.","Gemenskap och närhet."];
-const defQuotes=["Du klarar detta!","Varje dag är ett nytt börjande.","Du är starkare än du tror.","Ta ett andetag – du gör ditt bästa.","Framsteg, inte perfektion.","Jag gör så gott jag kan – och det räcker för idag.","Jag är värd respekt från andra och från mig själv.","Jag tillåter mig själv att vila, även om jag inte 'förtjänat' det.","Jag lär mig och utvecklas varje dag.","Varje dag tar jag steg mot mitt bästa jag.","Jag är kapabel att hantera utmaningar.","Jag är mer än tillräcklig, och jag har allt jag behöver inom mig.","Jag accepterar och älskar mig själv precis som jag är.","Mina känslor är ok, även de trötta och irriterade.","Jag är tålmodig mot min egen utveckling.","Jag ser mina styrkor och växer varje dag.","Jag tillåter glädje och självkärlek."];
+const defGrat=["Tacksam för kaffet.","Tacksam för vilan.","Tacksam för vänner.","Tacksam för musiken.","Tacksam för hälsan.","Tacksam för Anton min son.","Jag har hälsa.","Jag har vänner.","Jag bor bra.","Anton min son.","Pappa.","Anna.","Att få äta gott.","Tid utan måsten.","En god kopp te.","Tacksam för det jag har.","Att kunna säga nej. och det är ok","Att kunna säga tack.","Stunder av lugn.","Naturen runt mig."];
+const defQuotes=["Du klarar detta!","Varje dag är ett nytt börjande.","Du är starkare än du tror.","Ta ett andetag – du gör ditt bästa.","Jag gör så gott jag kan – och det räcker för idag.","Jag är värd respekt från andra och från mig själv.","Jag tillåter mig själv att vila, även om jag inte 'förtjänat' det.","Jag lär mig och utvecklas varje dag.","Varje dag tar jag steg mot mitt bästa jag.","Jag är kapabel att hantera utmaningar.","Jag är mer än tillräcklig, och jag har allt jag behöver inom mig.","Jag accepterar och älskar mig själv precis som jag är.","Mina känslor är ok, även de trötta och irriterade.","Jag ser mina styrkor och växer varje dag."];
 function loadL(k,fb){const s=localStorage.getItem(k);return s?JSON.parse(s):[...fb];}
 function saveL(k,a){localStorage.setItem(k,JSON.stringify(a));}
 let myGrat=loadL('gratList',defGrat);
@@ -836,11 +863,15 @@ async function fetchEl(){
     const curOre=prices[h];
     const low=Math.min(...prices);
     const high=Math.max(...prices);
+    const lowIdx=prices.indexOf(low);
+    const highIdx=prices.indexOf(high);
     const withVatAndTibber=Math.round(curOre*1.25+7.5);
     document.getElementById('el-now').innerText=curOre;
     document.getElementById('el-total').innerText=withVatAndTibber;
     document.getElementById('el-low').innerText=low;
     document.getElementById('el-high').innerText=high;
+    document.getElementById('el-low-time').innerText=lowIdx+':00';
+    document.getElementById('el-high-time').innerText=highIdx+':00';
     document.getElementById('el-updated').innerText='Uppdaterad '+now.toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})+' · Zon '+elZone;
     drawElChart(prices, h);
   }catch(e){
