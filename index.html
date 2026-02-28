@@ -1,80 +1,85 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valmande App</title>
-    <style>
-        body.dark-mode {
-            background-color: #121212;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
 </head>
 <body>
-    <h1>Welcome to the Valmande App</h1>
-
-    <!-- Gratitude Section -->
-    <div id="gratitude">
-        <h2>Gratitude List</h2>
+    <header>
+        <h1>Welcome to the Valmande App</h1>
+    </header>
+    <nav>
         <ul>
-            <li>Jag har hälsa</li>
-            <li>Anton min son</li>
-            <li>Anna</li>
-            <li>Pappa</li>
-            <li>Min trogna hund</li>
-            <li>Naturens skönhet</li>
-            <li>En god bok</li>
-            <li>Tid med vänner</li>
-            <li>Min familj</li>
-            <li>Hälsan</li>
-            <li>Kreativitet</li>
-            <li>Musik</li>
-            <li>Livet</li>
-            <li>Morgonkaffet</li>
-            <li>Lärande</li>
+            <li><a href="#gratitude">Tacksamhet</a></li>
+            <li><a href="#breathing">Lugn</a></li>
+            <li><a href="#inspiration">Inspiration</a></li>
+            <li><a href="#settings">Settings</a></li>
         </ul>
-    </div>
-
-    <!-- Inspiration Quotes Section -->
-    <div id="inspiration">
-        <h2>Inspiration Quotes</h2>
-        <ul>
-            <li>This is your day to shine.</li>
-            <li>Believe in yourself and all that you are.</li>
-            <li>Positivity is a choice.</li>
-            <li>Every day may not be good, but there is something good in every day.</li>
-            <li>Dream big and dare to fail.</li>
-            <li>You are stronger than you think.</li>
-            <li>Embrace the glorious mess that you are.</li>
-            <li>Your only limit is your mind.</li>
-            <li>Start where you are, use what you have, do what you can.</li>
-            <li>Happiness is not by chance, but by choice.</li>
-            <li>Stay positive, work hard, make it happen.</li>
-            <li>The best is yet to come.</li>
-        </ul>
-    </div>
-
-    <!-- Calm Tab Redesign -->
-    <div id="calmTab" style="background: linear-gradient(to bottom, #66a6ff, #89f7fe);">
-        <div id="breathingCircle" style="width: 200px; height: 200px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); transform: perspective(500px) rotateX(0deg);">
-            <!-- Breathing animation script goes here -->
-        </div>
-    </div>
-
-    <!-- Rain Sound Feature -->
-    <audio id="rainSound" controls>
-        <source src="rain.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
+    </nav>
+    <main>
+        <section id="gratitude">
+            <h2>Tacksamhet</h2>
+            <ul>
+                <li>Gratitude Text 1</li>
+                <li>Gratitude Text 2</li>
+                <li>Gratitude Text 3</li>
+                <li>Gratitude Text 4</li>
+                <li>Gratitude Text 5</li>
+                <li>Gratitude Text 6</li>
+                <li>Gratitude Text 7</li>
+                <li>Gratitude Text 8</li>
+                <li>Gratitude Text 9</li>
+                <li>Gratitude Text 10</li>
+                <li>Gratitude Text 11</li>
+                <li>Gratitude Text 12</li>
+                <li>Gratitude Text 13</li>
+                <li>Gratitude Text 14</li>
+                <li>Gratitude Text 15</li>
+            </ul>
+        </section>
+        <section id="breathing">
+            <h2>Lugn</h2>
+            <p>Practice 4-4-4 breathing exercise:</p>
+            <p>Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds.</p>
+            <audio controls>
+                <source src="rain-sound.mp3" type="audio/mpeg">
+                Your browser does not support the audio tag.
+            </audio>
+        </section>
+        <section id="inspiration">
+            <h2>Inspiration</h2>
+            <ul>
+                <li>Motivational Quote 1</li>
+                <li>Motivational Quote 2</li>
+                <li>Motivational Quote 3</li>
+                <li>Motivational Quote 4</li>
+                <li>Motivational Quote 5</li>
+                <li>Motivational Quote 6</li>
+                <li>Motivational Quote 7</li>
+                <li>Motivational Quote 8</li>
+                <li>Motivational Quote 9</li>
+                <li>Motivational Quote 10</li>
+                <li>Motivational Quote 11</li>
+                <li>Motivational Quote 12</li>
+            </ul>
+        </section>
+        <section id="settings">
+            <h2>Settings</h2>
+            <label for="dark-mode">Enable Dark Mode:</label>
+            <input type="checkbox" id="dark-mode">
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 Valmande App. All Rights Reserved.</p>
+    </footer>
     <script>
-        function checkDarkMode() {
-            const hour = new Date().getHours();
-            if (hour >= 19 || hour < 7) {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        }
-        checkDarkMode();
+        const darkModeToggle = document.getElementById('dark-mode');
+        darkModeToggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+        });
     </script>
 </body>
 </html>
