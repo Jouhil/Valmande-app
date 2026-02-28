@@ -1,105 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valmande App</title>
     <style>
-        /* Modern styling for inspiration tab */
-        .inspiration {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f0f0f0;
-        }
-        .inspiration-quote {
-            font-style: italic;
-            margin: 10px 0;
-        }
-        /* Breathing circle styles */
-        .breathing-circle {
-            /* 3D effect and larger size */
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
-            animation: breathing 12s infinite;
-        }
-        @keyframes breathing {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.1); }
-            50% { transform: scale(1); }
-            75% { transform: scale(0.9); }
-            100% { transform: scale(1); }
-        }
-        /* Gradient background for calm tab */
-        .calm {
-            background: linear-gradient(to right, #4facfe, #00f2fe);
+        body.dark-mode {
+            background-color: #121212;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="gratitude">
-        <h2>Gratitude</h2>
+    <h1>Welcome to the Valmande App</h1>
+
+    <!-- Gratitude Section -->
+    <div id="gratitude">
+        <h2>Gratitude List</h2>
         <ul>
-            <li>Thank you for the wonderful experiences in life.</li>
-            <li>Grateful for the support from friends and family.</li>
-            <li>Appreciating the beauty of nature.</li>
-            <li>Thankful for good health.</li>
-            <li>Gratitude for every small joy.</li>
-            <li>Thankful for the lessons learned through challenges.</li>
-            <li>Grateful to have enough food and shelter.</li>
-            <li>Appreciating the kindness of strangers.</li>
-            <li>Thankful for the opportunity to learn and grow.</li>
-            <li>Gratitude for laughter and fun moments.</li>
-            <li>Thankful for the comfort of home.</li>
-            <li>Grateful for the love and connections in life.</li>
-            <li>Appreciating the freedom to chase dreams.</li>
-            <li>Thankful for moments of peace and quiet.</li>
-            <li>Grateful for each new day and its possibilities.</li>
+            <li>Jag har hälsa</li>
+            <li>Anton min son</li>
+            <li>Anna</li>
+            <li>Pappa</li>
+            <li>Min trogna hund</li>
+            <li>Naturens skönhet</li>
+            <li>En god bok</li>
+            <li>Tid med vänner</li>
+            <li>Min familj</li>
+            <li>Hälsan</li>
+            <li>Kreativitet</li>
+            <li>Musik</li>
+            <li>Livet</li>
+            <li>Morgonkaffet</li>
+            <li>Lärande</li>
         </ul>
     </div>
-    <div class="calm">
-        <h2>Calm</h2>
-        <p>Experience tranquility with our calming features.</p>
-        <audio controls>
-            <source src="rain-sound.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+
+    <!-- Inspiration Quotes Section -->
+    <div id="inspiration">
+        <h2>Inspiration Quotes</h2>
+        <ul>
+            <li>This is your day to shine.</li>
+            <li>Believe in yourself and all that you are.</li>
+            <li>Positivity is a choice.</li>
+            <li>Every day may not be good, but there is something good in every day.</li>
+            <li>Dream big and dare to fail.</li>
+            <li>You are stronger than you think.</li>
+            <li>Embrace the glorious mess that you are.</li>
+            <li>Your only limit is your mind.</li>
+            <li>Start where you are, use what you have, do what you can.</li>
+            <li>Happiness is not by chance, but by choice.</li>
+            <li>Stay positive, work hard, make it happen.</li>
+            <li>The best is yet to come.</li>
+        </ul>
     </div>
-    <div class="breathing-circle">
-        <h2>Breathing Exercise</h2>
-        <p>Practice 4-4-4 breathing: Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds.</p>
+
+    <!-- Calm Tab Redesign -->
+    <div id="calmTab" style="background: linear-gradient(to bottom, #66a6ff, #89f7fe);">
+        <div id="breathingCircle" style="width: 200px; height: 200px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); transform: perspective(500px) rotateX(0deg);">
+            <!-- Breathing animation script goes here -->
+        </div>
     </div>
-    <div class="inspiration">
-        <h2>Inspiration</h2>
-        <div class="inspiration-quote">"The best way to predict the future is to create it." - Peter Drucker</div>
-        <div class="inspiration-quote">"Life is 10% what happens to us and 90% how we react to it." - Charles R. Swindoll</div>
-        <div class="inspiration-quote">"The only limit to our realization of tomorrow will be our doubts of today." - Franklin D. Roosevelt</div>
-        <div class="inspiration-quote">"Do what you can with all you have, wherever you are." - Theodore Roosevelt</div>
-        <div class="inspiration-quote">"Success is not the key to happiness. Happiness is the key to success." - Albert Schweitzer</div>
-        <div class="inspiration-quote">"The only way to do great work is to love what you do." - Steve Jobs</div>
-        <div class="inspiration-quote">"Believe you can and you're halfway there." - Theodore Roosevelt</div>
-        <div class="inspiration-quote">"Change your thoughts and you change your world." - Norman Vincent Peale</div>
-        <div class="inspiration-quote">"Act as if what you do makes a difference. It does." - William James</div>
-        <div class="inspiration-quote">"You miss 100% of the shots you don't take." - Wayne Gretzky</div>
-        <div class="inspiration-quote">"The future belongs to those who believe in the beauty of their dreams." - Eleanor Roosevelt</div>
-        <div class="inspiration-quote">"Your time is limited, so don't waste it living someone else's life." - Steve Jobs</div>
-    </div>
-    <footer>
-        <h2>Settings</h2>
-        <p>Toggle Dark Mode: <input type="checkbox" id="darkModeToggle"> <label for="darkModeToggle">Enable</label></p>
-    </footer>
+
+    <!-- Rain Sound Feature -->
+    <audio id="rainSound" controls>
+        <source src="rain.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const isDarkMode = () => {
-            const currentHour = new Date().getHours();
-            return currentHour >= 19 || currentHour < 7;
-        };
-        darkModeToggle.checked = isDarkMode();
-        document.body.classList.toggle('dark', darkModeToggle.checked);
-        darkModeToggle.addEventListener('change', () => {
-            document.body.classList.toggle('dark', darkModeToggle.checked);
-        });
+        function checkDarkMode() {
+            const hour = new Date().getHours();
+            if (hour >= 19 || hour < 7) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        checkDarkMode();
     </script>
 </body>
 </html>
