@@ -25,7 +25,14 @@ body.dark {
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Onest', -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; transition: background .4s, color .4s; }
 
-/* ═══ LOCK ═══ */
+/* PIN SETUP */
+#pin-setup{position:fixed;inset:0;background:linear-gradient(160deg,#1a2a3a,#0d1420);display:flex;align-items:center;justify-content:center;z-index:10000;}
+#pin-setup.hidden{display:none;}
+.setup-box{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px;}
+.setup-title{color:#fff;font-size:1.5rem;font-weight:700;}
+.setup-sub{color:rgba(255,255,255,.6);font-size:.9rem;text-align:center;line-height:1.5;max-width:280px;}
+
+
 #lock {
   position:fixed;inset:0;background:linear-gradient(160deg,#1a3a2a,#0d1f14);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -258,32 +265,62 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
 </head>
 <body>
 
-<!-- LOCK -->
+<!-- LOCK / PIN SETUP -->
 <div id="lock">
-  <div class="lock-icon">🔒</div>
-  <div class="lock-title">Min Välmående-app</div>
-  <div class="lock-sub">Ange din PIN-kod</div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
-    <div class="pin-dot" id="d4"></div><div class="pin-dot" id="d5"></div>
+  <!-- Normal unlock view -->
+  <div id="lock-unlock">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-title">Min Välmående-app</div>
+    <div class="lock-sub">Ange din PIN-kod</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
+      <div class="pin-dot" id="d4"></div><div class="pin-dot" id="d5"></div>
+    </div>
+    <div class="lock-err" id="lock-err"></div>
+    <div class="numpad">
+      <button class="nbtn" onclick="pp('1')">1</button>
+      <button class="nbtn" onclick="pp('2')">2</button>
+      <button class="nbtn" onclick="pp('3')">3</button>
+      <button class="nbtn" onclick="pp('4')">4</button>
+      <button class="nbtn" onclick="pp('5')">5</button>
+      <button class="nbtn" onclick="pp('6')">6</button>
+      <button class="nbtn" onclick="pp('7')">7</button>
+      <button class="nbtn" onclick="pp('8')">8</button>
+      <button class="nbtn" onclick="pp('9')">9</button>
+      <button class="nbtn empty"></button>
+      <button class="nbtn" onclick="pp('0')">0</button>
+      <button class="nbtn" onclick="pd()">⌫</button>
+    </div>
+    <button class="faceid-btn hidden" id="faceid-btn" onclick="tryBio()">Face ID / Touch ID</button>
   </div>
-  <div class="lock-err" id="lock-err"></div>
-  <div class="numpad">
-    <button class="nbtn" onclick="pp('1')">1</button>
-    <button class="nbtn" onclick="pp('2')">2</button>
-    <button class="nbtn" onclick="pp('3')">3</button>
-    <button class="nbtn" onclick="pp('4')">4</button>
-    <button class="nbtn" onclick="pp('5')">5</button>
-    <button class="nbtn" onclick="pp('6')">6</button>
-    <button class="nbtn" onclick="pp('7')">7</button>
-    <button class="nbtn" onclick="pp('8')">8</button>
-    <button class="nbtn" onclick="pp('9')">9</button>
-    <button class="nbtn empty"></button>
-    <button class="nbtn" onclick="pp('0')">0</button>
-    <button class="nbtn" onclick="pd()">⌫</button>
+
+  <!-- First-time PIN setup view -->
+  <div id="lock-setup" style="display:none;flex-direction:column;align-items:center;gap:18px;">
+    <div class="lock-icon">👋</div>
+    <div class="lock-title">Välkommen!</div>
+    <div class="lock-sub" id="setup-sub">Det verkar vara första gången. Välj en PIN-kod (6 siffror).</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="s0"></div><div class="pin-dot" id="s1"></div>
+      <div class="pin-dot" id="s2"></div><div class="pin-dot" id="s3"></div>
+      <div class="pin-dot" id="s4"></div><div class="pin-dot" id="s5"></div>
+    </div>
+    <div class="lock-err" id="setup-err"></div>
+    <div class="numpad">
+      <button class="nbtn" onclick="sp('1')">1</button>
+      <button class="nbtn" onclick="sp('2')">2</button>
+      <button class="nbtn" onclick="sp('3')">3</button>
+      <button class="nbtn" onclick="sp('4')">4</button>
+      <button class="nbtn" onclick="sp('5')">5</button>
+      <button class="nbtn" onclick="sp('6')">6</button>
+      <button class="nbtn" onclick="sp('7')">7</button>
+      <button class="nbtn" onclick="sp('8')">8</button>
+      <button class="nbtn" onclick="sp('9')">9</button>
+      <button class="nbtn empty"></button>
+      <button class="nbtn" onclick="sp('0')">0</button>
+      <button class="nbtn" onclick="spd()">⌫</button>
+    </div>
   </div>
-  <button class="faceid-btn hidden" id="faceid-btn" onclick="tryBio()">Face ID / Touch ID</button>
 </div>
 
 <!-- SHELL -->
@@ -416,6 +453,23 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
     <div id="tab-general" class="tab">
       <div class="page-title">📊 Allmänt</div>
 
+      <!-- Dagligt fokus -->
+      <div class="card" style="margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="font-size:1.4rem;">🎯</span>
+          <div>
+            <strong style="display:block;">Dagens avsikt</strong>
+            <span style="font-size:.8rem;color:var(--text2);">Vad vill du fokusera på idag?</span>
+          </div>
+        </div>
+        <div id="focus-display" style="display:none;background:linear-gradient(135deg,rgba(45,90,39,.1),rgba(45,90,39,.05));border:1px solid rgba(45,90,39,.2);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-style:italic;font-size:.95rem;color:var(--text);line-height:1.6;"></div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" class="txt-in" id="focus-input" placeholder="Skriv din avsikt för dagen..." maxlength="140" style="flex:1;">
+          <button class="add-btn" onclick="saveFocus()">Spara</button>
+        </div>
+        <div style="font-size:.75rem;color:var(--text2);margin-top:6px;text-align:right;" id="focus-date"></div>
+      </div>
+
       <!-- El-pris -->
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -453,9 +507,19 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
         </div>
         <!-- Prisgraf -->
         <div style="margin-bottom:8px;">
-          <div style="font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px;">📉 Prisgraf idag (öre/kWh ex. moms)</div>
-          <canvas id="el-chart" style="width:100%;height:160px;border-radius:12px;display:block;"></canvas>
-          <div style="font-size:.72rem;color:var(--text2);text-align:center;margin-top:4px;">Den röda linjen visar aktuell timme</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-size:.85rem;font-weight:600;color:var(--text);">📉 Prisgraf idag (öre/kWh ex. moms)</div>
+            <div id="chart-tooltip" style="font-size:.82rem;font-weight:700;color:var(--accent);display:none;"></div>
+          </div>
+          <div style="position:relative;">
+            <canvas id="el-chart" style="width:100%;height:170px;border-radius:12px;display:block;cursor:crosshair;touch-action:none;"></canvas>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <span style="font-size:.75rem;color:var(--text2);">00:00</span>
+            <input type="range" id="chart-hour-slider" min="0" max="23" value="0" style="flex:1;accent-color:var(--accent);" oninput="onChartSlider(this.value)">
+            <span style="font-size:.75rem;color:var(--text2);">23:00</span>
+          </div>
+          <div style="font-size:.72rem;color:var(--text2);text-align:center;margin-top:2px;">👆 Dra i reglaget eller tryck på grafen för att se priset vid en viss tid</div>
         </div>
         <div class="el-zone">
           <span style="font-size:.85rem;color:var(--text2);">Zon:</span>
@@ -503,6 +567,10 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
           <span class="s-lbl">Face ID / Touch ID</span>
           <label class="toggle"><input type="checkbox" id="bioToggle" onchange="onBioToggle(this.checked)"><span class="slider"></span></label>
         </div>
+        <div class="s-row">
+          <span class="s-lbl">Ändra PIN-kod</span>
+          <button onclick="changePin()" style="padding:6px 14px;border-radius:10px;border:1.5px solid var(--border);background:none;color:var(--text2);font-family:inherit;font-size:.85rem;cursor:pointer;">Ändra →</button>
+        </div>
       </div>
 
       <div class="s-card">
@@ -539,19 +607,68 @@ body.dark .help-tag{background:rgba(76,175,80,.15);}
 </div><!-- /shell -->
 
 <script>
-// ═══ PIN ═══
-const PIN = '486810';
+// ═══ PIN – dynamisk (sparas i localStorage) ═══
+let SAVED_PIN = localStorage.getItem('userPin') || null;
 let pe = '';
+let setupStep = 0; // 0=välj ny, 1=bekräfta
+let setupFirst = '';
+
+function initLock(){
+  if(!SAVED_PIN){
+    // Första gången – visa setup
+    document.getElementById('lock-unlock').style.display='none';
+    const s=document.getElementById('lock-setup');
+    s.style.display='flex';
+  } else {
+    const bioOn=localStorage.getItem('bioOn')==='1';
+    if(bioOn){document.getElementById('faceid-btn').classList.remove('hidden');setTimeout(tryBio,400);}
+  }
+}
+
+// Normal unlock
 function ud(){for(let i=0;i<6;i++){const d=document.getElementById('d'+i);d.classList.remove('filled','error');if(i<pe.length)d.classList.add('filled');}}
 function pp(digit){if(pe.length>=6)return;pe+=digit;ud();document.getElementById('lock-err').innerText='';if(pe.length===6)setTimeout(chkPin,150);}
 function pd(){pe=pe.slice(0,-1);ud();document.getElementById('lock-err').innerText='';}
 function chkPin(){
-  if(pe===PIN){unlock();return;}
+  if(pe===SAVED_PIN){unlock();return;}
   for(let i=0;i<6;i++){document.getElementById('d'+i).classList.remove('filled');document.getElementById('d'+i).classList.add('error');}
   document.getElementById('lock-err').innerText='Fel PIN-kod, försök igen';
   setTimeout(()=>{for(let i=0;i<6;i++)document.getElementById('d'+i).classList.remove('error');pe='';ud();},800);
 }
-function unlock(){document.getElementById('lock').classList.add('hidden');updateStreak();}
+function unlock(){document.getElementById('lock').classList.add('hidden');updateStreak();loadFocus();}
+
+// PIN setup – första gången
+let se='';
+function sudDots(){for(let i=0;i<6;i++){const d=document.getElementById('s'+i);d.classList.remove('filled','error');if(i<se.length)d.classList.add('filled');}}
+function sp(digit){if(se.length>=6)return;se+=digit;sudDots();document.getElementById('setup-err').innerText='';if(se.length===6)setTimeout(checkSetup,150);}
+function spd(){se=se.slice(0,-1);sudDots();}
+function checkSetup(){
+  if(setupStep===0){
+    // Steg 1: spara första försöket
+    setupFirst=se;se='';sudDots();
+    setupStep=1;
+    document.getElementById('setup-sub').innerText='Ange samma PIN igen för att bekräfta.';
+    document.getElementById('setup-err').innerText='';
+  } else {
+    // Steg 2: bekräfta
+    if(se===setupFirst){
+      SAVED_PIN=se;
+      localStorage.setItem('userPin',SAVED_PIN);
+      document.getElementById('lock-setup').style.display='none';
+      document.getElementById('lock-unlock').style.display='flex';
+      // Logga in direkt
+      unlock();
+    } else {
+      for(let i=0;i<6;i++){document.getElementById('s'+i).classList.add('error');}
+      document.getElementById('setup-err').innerText='PIN-koderna stämmer inte. Försök igen.';
+      setTimeout(()=>{
+        for(let i=0;i<6;i++)document.getElementById('s'+i).classList.remove('error');
+        setupStep=0;setupFirst='';se='';sudDots();
+        document.getElementById('setup-sub').innerText='Det verkar vara första gången. Välj en PIN-kod (6 siffror).';
+      },900);
+    }
+  }
+}
 
 // ═══ BIOMETRICS ═══
 async function tryBio(){
@@ -628,9 +745,9 @@ setInterval(()=>{if(currentTheme==='auto')applyTheme();},60000);
   document.getElementById('th-'+t).classList.add('active');
   const bioOn=localStorage.getItem('bioOn')==='1';
   document.getElementById('bioToggle').checked=bioOn;
-  if(bioOn){document.getElementById('faceid-btn').classList.remove('hidden');setTimeout(tryBio,400);}
   loadStats();
   updateScreenInfo();
+  initLock();
 })();
 
 // ═══ NAVIGATION ═══
@@ -646,7 +763,7 @@ function showTab(name, btn){
   if(btn)btn.classList.add('active');
   if(name!=='calm')stopBreath();
   if(name==='settings'){renderLists();updateScreenInfo();}
-  if(name==='general'){fetchEl();loadStats();}
+  if(name==='general'){fetchEl();loadStats();loadFocus();}
   if(name==='help'){renderHelp();}
 }
 
@@ -857,6 +974,11 @@ function newQuote(){
 
 // ═══ FLIK 4: ALLMÄNT - ELPRIS ═══
 let elZone='SE3';
+let elPrices=[];
+let elHours=[];      // Swedish hours from time_start e.g. [0,1,2,...,23]
+let elCurrentIdx=0;
+let elSelectedIdx=0;
+
 function setZone(z,btn){
   elZone=z;
   document.querySelectorAll('.zone-btn').forEach(b=>b.classList.remove('active'));
@@ -873,23 +995,39 @@ async function fetchEl(){
     const r=await fetch(url);
     if(!r.ok)throw new Error('API fel');
     const data=await r.json();
-    const h=now.getHours();
-    const cur=data[h];
-    const prices=data.map(x=>Math.round(x.SEK_per_kWh*100));
-    const curOre=prices[h];
-    const low=Math.min(...prices);
-    const high=Math.max(...prices);
-    const lowIdx=prices.indexOf(low);
-    const highIdx=prices.indexOf(high);
+
+    // Extract correct Swedish hour from time_start: "2026-02-28T14:00:00+01:00" → 14
+    elHours=data.map(x=>parseInt(x.time_start.slice(11,13)));
+    elPrices=data.map(x=>Math.round(x.SEK_per_kWh*100));
+
+    // Match current device hour to the correct index
+    const nowH=now.getHours();
+    let hIdx=elHours.indexOf(nowH);
+    if(hIdx===-1)hIdx=Math.max(0,Math.min(elPrices.length-1,nowH));
+    elCurrentIdx=hIdx;
+    elSelectedIdx=hIdx;
+
+    const curOre=elPrices[hIdx];
+    const low=Math.min(...elPrices);
+    const high=Math.max(...elPrices);
+    const lowIdx=elPrices.indexOf(low);
+    const highIdx=elPrices.indexOf(high);
     const withVatAndTibber=Math.round(curOre*1.25+7.5);
+
     document.getElementById('el-now').innerText=curOre;
     document.getElementById('el-total').innerText=withVatAndTibber;
     document.getElementById('el-low').innerText=low;
     document.getElementById('el-high').innerText=high;
-    document.getElementById('el-low-time').innerText=lowIdx+':00';
-    document.getElementById('el-high-time').innerText=highIdx+':00';
+    // Show correct Swedish times from time_start
+    document.getElementById('el-low-time').innerText=String(elHours[lowIdx]).padStart(2,'0')+':00';
+    document.getElementById('el-high-time').innerText=String(elHours[highIdx]).padStart(2,'0')+':00';
     document.getElementById('el-updated').innerText='Uppdaterad '+now.toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})+' · Zon '+elZone;
-    drawElChart(prices, h);
+
+    const slider=document.getElementById('chart-hour-slider');
+    if(slider){slider.max=elPrices.length-1;slider.value=hIdx;}
+    updateChartTooltip(hIdx);
+    drawElChart(hIdx,hIdx);
+    initChartInteraction();
   }catch(e){
     document.getElementById('el-now').innerText='–';
     document.getElementById('el-total').innerText='–';
@@ -897,19 +1035,64 @@ async function fetchEl(){
   }
 }
 
-function drawElChart(prices, currentHour){
+function onChartSlider(v){
+  elSelectedIdx=parseInt(v);
+  updateChartTooltip(elSelectedIdx);
+  drawElChart(elCurrentIdx,elSelectedIdx);
+}
+
+function updateChartTooltip(idx){
+  const tt=document.getElementById('chart-tooltip');
+  if(!tt||!elPrices.length)return;
+  const price=elPrices[idx];
+  const h=elHours[idx]??idx;
+  tt.innerText=String(h).padStart(2,'0')+':00 → '+price+' öre/kWh';
+  tt.style.display='block';
+}
+
+function initChartInteraction(){
+  const canvas=document.getElementById('el-chart');
+  if(!canvas||canvas._hasInteraction)return;
+  canvas._hasInteraction=true;
+  function getIdxFromX(clientX){
+    const rect=canvas.getBoundingClientRect();
+    const W=rect.width;
+    const pad={left:36,right:10};
+    const cw=W-pad.left-pad.right;
+    const x=clientX-rect.left-pad.left;
+    const n=elPrices.length||24;
+    const frac=Math.max(0,Math.min(1,x/cw));
+    return Math.round(frac*(n-1));
+  }
+  function handleMove(clientX){
+    const idx=getIdxFromX(clientX);
+    elSelectedIdx=idx;
+    const slider=document.getElementById('chart-hour-slider');
+    if(slider)slider.value=idx;
+    updateChartTooltip(idx);
+    drawElChart(elCurrentIdx,idx);
+  }
+  canvas.addEventListener('mousedown',(e)=>{handleMove(e.clientX);});
+  canvas.addEventListener('mousemove',(e)=>{if(e.buttons===1)handleMove(e.clientX);});
+  canvas.addEventListener('touchstart',(e)=>{e.preventDefault();handleMove(e.touches[0].clientX);},{passive:false});
+  canvas.addEventListener('touchmove',(e)=>{e.preventDefault();handleMove(e.touches[0].clientX);},{passive:false});
+}
+
+function drawElChart(currentIdx, selectedIdx){
+  const prices=elPrices;
+  if(!prices||!prices.length)return;
   const canvas=document.getElementById('el-chart');
   if(!canvas)return;
   const isDark=document.body.classList.contains('dark');
   const dpr=window.devicePixelRatio||1;
-  const W=canvas.offsetWidth||canvas.parentElement.offsetWidth||320;
-  const H=160;
+  const W=canvas.offsetWidth||canvas.parentElement?.offsetWidth||320;
+  const H=170;
   canvas.width=W*dpr; canvas.height=H*dpr;
   canvas.style.width=W+'px'; canvas.style.height=H+'px';
   const ctx=canvas.getContext('2d');
   ctx.scale(dpr,dpr);
 
-  const pad={top:14,right:10,bottom:28,left:36};
+  const pad={top:14,right:14,bottom:28,left:36};
   const cw=W-pad.left-pad.right;
   const ch=H-pad.top-pad.bottom;
   const n=prices.length;
@@ -921,11 +1104,11 @@ function drawElChart(prices, currentHour){
   ctx.fillStyle=isDark?'#1a2230':'#f0f4f0';
   ctx.roundRect(0,0,W,H,12);ctx.fill();
 
-  // Grid lines
-  ctx.strokeStyle=isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
+  // Grid + y-axis labels
   ctx.lineWidth=1;
   for(let i=0;i<=4;i++){
     const y=pad.top+ch*(1-i/4);
+    ctx.strokeStyle=isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
     ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cw,y);ctx.stroke();
     const label=Math.round(minP+range*(i/4));
     ctx.fillStyle=isDark?'rgba(200,220,200,0.6)':'rgba(60,80,60,0.6)';
@@ -934,9 +1117,9 @@ function drawElChart(prices, currentHour){
     ctx.fillText(label,pad.left-4,y+3);
   }
 
-  // Filled area under curve
+  // Filled area
   const grad=ctx.createLinearGradient(0,pad.top,0,pad.top+ch);
-  grad.addColorStop(0,isDark?'rgba(140,230,80,0.35)':'rgba(45,90,39,0.25)');
+  grad.addColorStop(0,isDark?'rgba(140,230,80,0.3)':'rgba(45,90,39,0.2)');
   grad.addColorStop(1,'rgba(0,0,0,0)');
   ctx.beginPath();
   prices.forEach((p,i)=>{
@@ -944,12 +1127,10 @@ function drawElChart(prices, currentHour){
     const y=pad.top+ch*(1-(p-minP)/range);
     i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
   });
-  ctx.lineTo(pad.left+cw,pad.top+ch);
-  ctx.lineTo(pad.left,pad.top+ch);
-  ctx.closePath();
-  ctx.fillStyle=grad;ctx.fill();
+  ctx.lineTo(pad.left+cw,pad.top+ch);ctx.lineTo(pad.left,pad.top+ch);
+  ctx.closePath();ctx.fillStyle=grad;ctx.fill();
 
-  // Line
+  // Price line
   ctx.beginPath();
   ctx.strokeStyle=isDark?'#a8e87c':'#2d5a27';
   ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.lineCap='round';
@@ -960,34 +1141,112 @@ function drawElChart(prices, currentHour){
   });
   ctx.stroke();
 
-  // Dots for known hours
-  prices.forEach((p,i)=>{
-    const x=pad.left+(i/(n-1))*cw;
-    const y=pad.top+ch*(1-(p-minP)/range);
-    ctx.beginPath();
-    ctx.arc(x,y,i===currentHour?5:2.5,0,Math.PI*2);
-    ctx.fillStyle=i===currentHour?'#ef5350':(isDark?'#a8e87c':'#2d5a27');
-    ctx.fill();
-    if(i===currentHour){
-      ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
-    }
-  });
-
-  // Current hour vertical line
-  const cx2=pad.left+(currentHour/(n-1))*cw;
-  ctx.beginPath();ctx.strokeStyle='rgba(239,83,80,0.5)';ctx.lineWidth=1.5;
-  ctx.setLineDash([4,3]);
-  ctx.moveTo(cx2,pad.top);ctx.lineTo(cx2,pad.top+ch);ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Hour labels on x-axis (every 3h)
+  // X-axis hour labels — use actual Swedish hours from elHours
   ctx.fillStyle=isDark?'rgba(200,220,200,0.6)':'rgba(60,80,60,0.6)';
   ctx.font=`${Math.round(9*dpr)/dpr}px Onest,sans-serif`;
   ctx.textAlign='center';
-  for(let i=0;i<n;i+=3){
-    const x=pad.left+(i/(n-1))*cw;
-    ctx.fillText(i+'h',x,H-6);
+  for(let i=0;i<n;i++){
+    const h=elHours[i]??i;
+    // Show label every 3 hours (when hour % 3 === 0)
+    if(h%3===0){
+      const x=pad.left+(i/(n-1))*cw;
+      ctx.fillText(String(h).padStart(2,'0'),x,H-6);
+    }
   }
+
+  // ── Selected hour line + bubble ──
+  const sel=selectedIdx;
+  const selX=pad.left+(sel/(n-1))*cw;
+  const selY=pad.top+ch*(1-(prices[sel]-minP)/range);
+  const selH=elHours[sel]??sel;
+
+  // Dashed vertical line
+  ctx.beginPath();
+  ctx.strokeStyle='rgba(239,83,80,0.75)';
+  ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.moveTo(selX,pad.top);ctx.lineTo(selX,pad.top+ch);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Dot
+  ctx.beginPath();ctx.arc(selX,selY,6,0,Math.PI*2);
+  ctx.fillStyle='#ef5350';ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+
+  // Bubble with hour and price
+  const bubbleTxt=String(selH).padStart(2,'0')+':00  '+prices[sel]+' öre';
+  ctx.font=`bold ${Math.round(11*dpr)/dpr}px Onest,sans-serif`;
+  const tw=ctx.measureText(bubbleTxt).width+16;
+  const bh=20;
+  let bx=selX-tw/2;
+  bx=Math.max(pad.left,Math.min(W-pad.right-tw,bx));
+  const by=selY-bh-10;
+  const bubbleTop=by<pad.top?selY+10:by;
+
+  ctx.fillStyle=isDark?'rgba(30,40,30,0.92)':'rgba(255,255,255,0.95)';
+  ctx.shadowColor='rgba(0,0,0,0.2)';ctx.shadowBlur=6;
+  ctx.beginPath();ctx.roundRect(bx,bubbleTop,tw,bh,6);ctx.fill();
+  ctx.shadowBlur=0;
+
+  ctx.fillStyle=isDark?'#a8e87c':'#1e3a1e';
+  ctx.textAlign='left';
+  ctx.fillText(bubbleTxt,bx+8,bubbleTop+14);
+
+  // Current-hour dot (faded)
+  if(sel!==currentIdx){
+    const chX=pad.left+(currentIdx/(n-1))*cw;
+    const chY=pad.top+ch*(1-(prices[currentIdx]-minP)/range);
+    ctx.beginPath();ctx.arc(chX,chY,4,0,Math.PI*2);
+    ctx.fillStyle='rgba(239,83,80,0.4)';ctx.fill();
+  }
+}
+
+
+// ═══ ÄNDRA PIN ═══
+function changePin(){
+  // Reuse setup flow — reset and show the in-lock setup view
+  localStorage.removeItem('userPin');
+  SAVED_PIN=null;
+  setupStep=0;setupFirst='';se='';
+  for(let i=0;i<6;i++){document.getElementById('s'+i).classList.remove('filled','error');}
+  document.getElementById('setup-sub').innerText='Välj en ny PIN-kod (6 siffror).';
+  document.getElementById('setup-err').innerText='';
+  document.getElementById('lock-unlock').style.display='none';
+  document.getElementById('lock-setup').style.display='flex';
+  document.getElementById('lock').classList.remove('hidden');
+}
+
+// ═══ DAGLIGT FOKUS ═══
+function loadFocus(){
+  try{
+    const f=JSON.parse(localStorage.getItem('dailyFocus')||'{}');
+
+    const today=new Date().toDateString();
+    const disp=document.getElementById('focus-display');
+    const inp=document.getElementById('focus-input');
+    const dateEl=document.getElementById('focus-date');
+    if(!disp)return;
+    if(f.date===today&&f.text){
+      disp.innerText='"'+f.text+'"';
+      disp.style.display='block';
+      if(inp)inp.value=f.text;
+      if(dateEl)dateEl.innerText='Sparad idag';
+    }else{
+      disp.style.display='none';
+      if(dateEl)dateEl.innerText='';
+    }
+  }catch(e){}
+}
+function saveFocus(){
+  const inp=document.getElementById('focus-input');
+  if(!inp)return;
+  const v=inp.value.trim();
+  if(!v)return;
+  const today=new Date().toDateString();
+  localStorage.setItem('dailyFocus',JSON.stringify({text:v,date:today}));
+  const disp=document.getElementById('focus-display');
+  if(disp){disp.innerText='"'+v+'"';disp.style.display='block';}
+  const dateEl=document.getElementById('focus-date');
+  if(dateEl)dateEl.innerText='Sparad idag ✓';
 }
 
 // ═══ STATISTIK ═══
